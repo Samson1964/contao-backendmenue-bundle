@@ -1,0 +1,34 @@
+{
+  "name": "schachbulle/contao-backendmenue-bundle",
+  "description": "Verwalte eigene Bereiche in der Backend-Menüspalte mit frei wählbaren Namen, Icons und Positionen.",
+  "type": "contao-bundle",
+  "keywords": [
+    "contao",
+    "backend",
+    "menu",
+    "administration"
+  ],
+  "homepage": "https://github.com/samson1964/contao-backendmenue-bundle",
+  "license": "LGPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Samson Hoppe",
+      "email": "hoppe.berlin@googlemail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "contao/core-bundle": "^4.13 || ^5.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Schachbulle\\BackendMenueBundle\\": "src/"
+    }
+  },
+  "extra": {
+    "contao-manager-plugin": "Schachbulle\\BackendMenueBundle\\ContaoManager\\Plugin"
+  }
+}

@@ -1,0 +1,17 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Schachbulle\BackendMenueBundle\:
+    resource: '../../'
+    exclude:
+      - '../../BackendMenueBundle.php'
+      - '../../ContaoManager/'
+
+  Schachbulle\BackendMenueBundle\Service\BackendMenuManipulator:
+    public: true
+
+  Schachbulle\BackendMenueBundle\Service\IconProvider:
+    public: true

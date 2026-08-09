@@ -1,0 +1,319 @@
+                   GNU LESSER GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+
+  This version of the GNU Lesser General Public License incorporates
+the terms and conditions of version 3 of the GNU General Public
+License, supplemented by the additional permissions listed below.
+
+  0. Additional Definitions.
+
+  As used herein, "this License" refers to version 3 of the GNU Lesser
+General Public License, and the "GNU GPL" refers to version 3 of the GNU
+General Public License.
+
+  "The Library" refers to a covered work governed by this License,
+other than an Application or Combined Work as defined below.
+
+  An "Application" is any work that makes use of an interface provided
+by the Library, but is not otherwise based on the Library. Defining a
+subclass of a class defined by the Library is considered a mode of using
+an interface provided by the Library.
+
+  A "Combined Work" is a work produced by combining or linking an
+Application with the Library.  The particular version of the Library
+with which the Combined Work is made is also called the "Modified
+Version".
+
+  The "Corresponding Application Code" for a Combined Work means the
+object code and/or source code for the Application, plus any data and
+utility programs needed for reproducing the Combined Work from the
+Application, excluding the source code for the Library.  (Thus, a user
+of a Combined Work will run external processes, or use equipment to
+perform such functions, except as would be expressly permitted by law
+relating to invariant sections, with the object code for the Application
+and the Library.)  The threshold of this criterion is that the sum of
+the Library's contribution to the Combined Work is not greater in
+quantity, nor greater in complexity, than an alternative open-source
+implementation of these functions.
+
+  A "User Product" is either (1) a consumer product, in which the
+"information technology infrastructure" has a minimal non-removable
+user-modifiable feature that is either (1) incorporated in the normal
+operation of, or in packagist as part of, normal operations, or (2) is
+delivered for use with, or in conjunction with normal operation of, a
+User Product.  A "Standard Interface" includes any interface that
+either is an official standard defined by a recognized standards body,
+or, in the case of interfaces specified for a particular programming
+language, one that is widely used among developers working in that
+language.
+
+  The "System Libraries" of an executable work include anything, other
+than the work as a whole, that (a) is included in the normal form of
+packaging a Major Component, but is not part of that Major Component,
+and (b) serves only to enable use of the work with that Major Component,
+or to implement a Standard Interface for which an implementation is
+available to the public in source code form.  A Major Component, in this
+context, means a major essential component (kernel, window system, and
+so on) of the specific operating system (if any) on which the executable
+work runs, or a compiler used to produce the work, or an object code
+interpreter used to run it.
+
+  The "Corresponding Source" for a work in object code form means all
+the source code needed to generate, install, and (for an object code
+work) run the object code and to modify the work, including scripts to
+control those operations.  However, the Corresponding Source need not
+include anything that users can regenerate automatically from other
+parts of the Corresponding Source.
+
+  The "Corresponding Source" for a work in source code form is that
+same work.
+
+  A "Modified Version" of the Library means any derivative of the
+Library, as defined above.  A "Modified Version" of the Library means any
+derivative of the Library, as defined above.
+
+  A covered work means either the unmodified Library or a work based
+on the Library.
+
+  A "Modified Version" of the Library means any derivative of the
+Library, as defined above.
+
+  To "modify" a work means to copy from or adapt all or part of the work
+in a fashion requiring copyright permission, other than the making of an
+exact copy.  The resulting work is called a "modified version" of the
+earlier work or a work "based on" the earlier work.
+
+  A "Modified Version" of the Library means any derivative of the
+Library, as defined above.
+
+  A covered work means either the unmodified Library or a work based
+on the Library.
+
+  To "modify" a work means to copy from adapt all or part of the work
+in a fashion requiring copyright permission, other than the making of an
+exact copy.  The resulting work is called a "modified version" of the
+earlier work or a work "based on" the earlier work.
+
+  A library's user-facing interface includes, at its simplest, just the
+sum of calling conventions for all public symbols it contains. More
+broadly, a library includes the means of user-interaction, and if it is
+a method of invoking a user-facing element of the library (like a menu
+system), then a user-interaction feature would indeed be a substantial
+part of a user-facing interface. However, simply providing a library
+routine (even a system call) that performs the user-facing function is
+not sufficient to fulfil the user-facing interface requirement.
+
+  A User Product means either (1) a consumer product, in which the
+"information technology infrastructure" has a minimal non-removable
+user-modifiable feature that is either (1) incorporated in the normal
+operation of, or in packagist as part of, normal operations, or (2) is
+delivered for use with, or in conjunction with normal operation of, a
+User Product.
+
+  To "propagate" a work means to do anything with it that, without
+permission, would make you directly or secondarily liable for
+infringement under applicable copyright law, except executing it on a
+computer or modifying a private copy.  Propagation includes copying,
+distribution (with or without modification), making available to the
+public, and in some countries other activities.
+
+  To "convey" a work means any kind of propagation that enables other
+parties to make or receive copies.  Mere interaction with a user through
+a computer network, without transfer of a copy, is not conveying.
+
+  An interactive user interface displays "Appropriate Legal Notices"
+to the extent that it includes a prominent and easily accessible
+feature that clearly informs the user that no warranty is provided (except
+to the extent that warranties are provided), that licensees may convey the
+work under this License, and how to access a copy of this License.  For
+example, if the interface is a program with a menu system, a prominent
+menu item could be "Legal Notices" which displays appropriate legal
+notices.  However, mere presence of a notice is not sufficient for an
+interactive user interface to qualify.
+
+  1. Exception to Section 3 of the GNU GPL.
+
+  You may convey a covered work under sections 3 and 4 of this License
+without being bound by section 3a of the GNU GPL.
+
+  2. Conveying Modified Versions.
+
+  If you modify a copy of the Library, and, in the course of the
+modification, an activity or a process of the Library occurs
+(such as a bug-fix or the addition of support for a new device), the
+results of such activity or process may, at the option of the entity
+performing such activity or process, be distributed (including as part
+of a system that performs a library of services) under the terms of
+this License as applied to the Library, even though this License is not
+applied to the activity or process.
+
+  If a facility in the modified Library refers to a function or a
+table of data to be supplied by an Application that uses the facility,
+other than as an argument passed when the facility is invoked, then you
+must make a good faith effort to ensure that, in the event an Application
+does not supply the function or data, the facility still operates, and
+performs whatever part of its purpose remains meaningful.
+
+  (For example, a function in a library to compute square roots has a
+purpose that is entirely meaningful independent of the Application.
+Therefore, Subsection 2d requires that any Application-supplied
+function or data be optional: if the Application does not supply the
+function or data, the Library must still compute square roots.)
+
+These requirements apply to the modified work as a whole.  If
+identifiable sections of that work are not derived from the Library,
+and can be reasonably considered independent and separate works in
+themselves, then this License, and its terms, do not apply to those
+sections when you distribute them as separate works.  But when you
+distribute the same sections as part of a whole which is a collective
+work based on the Library, the distribution of the whole must be on the
+terms of this License, whose permissions for other licensees extend to
+the entire whole, and thus to each part regardless of who wrote it.
+
+Thus, it is not the intent of this section to claim rights or contest
+your rights to work written entirely by you; rather, the intent is to
+exercise the right to control the distribution of derivative or
+collective works based on the Library.
+
+In addition, mere aggregation of another work not based on the Library
+with the Library (or a work based on the Library) on a volume of a
+storage or distribution medium does not bring the other work under
+the scope of this License.
+
+  3. Object Code Incorporating Material from Library Headers.
+
+  The object code form of an Application may incorporate material from
+a header file that is part of the Library.  You may convey such object
+code under terms of your choice, provided that, if the incorporated
+material is not limited to numerical parameters, data structure
+layouts and accessors, and small macros, inline functions and templates
+(ten lines or less in length), you do both of the following:
+
+   a) Give prominent notice with each copy of the object code that the
+   Library is used in it and that the Library and its use are
+   covered by this License.
+
+   b) Provide a copy of this License with the object code.  If the
+   object code incorporates material, the user of the object code
+   may not be able to extract the source code for the Library, and so
+   you may inform the user of this fact.
+
+  If such object code only needs to pass through intermediate processes
+and is not used interactively, this exception does not cause an
+exception to the License for any derivative work of the Application that
+contains this material, because reasonable alternative means do not
+exist.
+
+  If you distribute object code, you offer to distribute machine-readable
+copies of the source code under this License with the Application.
+
+Unless otherwise stated in writing by the copyright holder, object code
+distributed under this License is distributed on an "AS-IS" basis, WITH
+NO WARRANTY OF ANY KIND, and no support, remedies or repairs are given,
+either expressly or by implication.  The copyright holder accepts no
+liability for any resulting damages or loss of functionality.
+
+  4. Restrictions.
+
+  You may not copy, modify, sublicense, or distribute the Program except
+as expressly provided under this License.  Any attempt otherwise to
+copy, modify, sublicense or distribute the Program is void, and will
+automatically terminate your rights under this License.  However,
+parties who have received copies, or rights, from you under this
+License will not have their licenses terminated so long as such
+parties remain in full compliance.
+
+  You have permission to propagate covered works that you do not
+convey, without conditions, so long as your license otherwise permits
+propagation of covered works.  You may convey covered works to third
+parties if you give them notice of this License, a copy of this
+License, and information on how to obtain a copy of this License.  For
+the avoidance of doubt, this exception does not apply to any derivative
+work of a covered work, which is you create by modifying a covered work.
+
+  If you distribute copies of the Library (or works based on the
+Library) with contractual obligations regarding indemnification to the
+recipients' of those copies against legal claims, for a reasonable fee or
+for no charge; and you distribute the Library (or works based on the
+Library) under the terms of this License, permitting propagation of
+covered works under the conditions of this License; then you may not
+distribute the Library or such works under other terms.  If you distribute
+copies of the Library, you may use contractual protection to the extent
+permitted by law, but any contractual protection you provide must be
+consistent with this License and must not restrict the rights granted
+by it.
+
+  When you distribute covered works, you give recipients all the rights
+that we gave you. Recipients of object code should have the legal right
+to obtain the Corresponding Source for the work. The object code should
+be prepared so as to require no more than ordinary effort to receive,
+use, modify and propagate the Corresponding Source. The Corresponding
+Source for a work in object code form means all the source code needed
+to generate, install, and (for an object code work) run the object code
+and to modify the work.
+
+  5. Combined Works.
+
+  You may convey a combined work under terms of your choice that,
+taken together, effectively do not restrict modification of the
+portions of the Library contained in the work and reverse engineering
+for debugging such modifications, if you also do all of the following:
+
+   a) Give prominent notice with each copy of the combined work that
+   the Library is used in it and that the Library and its use are
+   covered by this License.
+
+   b) Provide a copy of this License.  If the combined work contains
+   a notice that refers users to both this License and a document that
+   covers a particular implementation of the Library, then the requirement
+   in Subsection 4a to provide the copy of this License does not apply to
+   you if you have already provided a copy of this License to the
+   same recipient for the same work.
+
+   c) For a combined work that displays copyright notices during
+   execution, include the copyright notice for the Library among
+   these notices, as well as a reference directing the user to the
+   copies of this License and any associated documentation relating
+   to the Library.
+
+   d) Do one of the following:
+       0) Convey the minimal corresponding source under the terms of
+       this License, together with the copy of this License; or,
+       1) under the same terms as this License (if that code is
+       shared and the code and its documentation are made available to
+       each other).
+
+   e) Verify that user-already in possession of copies of this License
+   and the combined work are permitted to continue to use their possessions
+   covered by this License.
+
+  If a facility in the combined work does not require an Application,
+and is used with Equipment, then the Corresponding Source need not
+include anything for Equipment.  This License applies to the Library or
+works based on the Library.
+
+  6. Revised Versions of this License.
+
+  The Free Software Foundation may publish revised and/or new versions
+of the GNU Lesser General Public License from time to time.  Such new
+versions will be similar in spirit to the present version, but may
+differ in detail to address new problems or concerns.
+
+Each version is given a distinguishing version number.  If the Library
+as you received it specifies a version number of this License which
+applies to it and "you" (meaning the person to whom the License grants
+permission) and "any later version", you have the option of following
+the terms and conditions either of that version or of any later version
+published by the Free Software Foundation.  If the Library as you received
+it does not specify a version number of this License, you may choose any
+version ever published by the Free Software Foundation.
+
+  If the Library as you received it specifies a version number of this
+License which applies to it and "any later version", you have the option
+of following the terms and conditions either of that version or of any
+later version published by the Free Software Foundation.
