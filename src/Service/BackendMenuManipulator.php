@@ -17,6 +17,24 @@ use Contao\Database;
 class BackendMenuManipulator
 {
     /**
+     * Nach der Manipulation tatsächlich angelegte Bereiche: Gruppenschlüssel => Icon.
+     *
+     * Wird vom BackendAssetsListener ausgelesen, um die Icon-CSS-Regeln
+     * für genau diese Gruppen zu erzeugen.
+     */
+    private array $appliedAreas = [];
+
+    /**
+     * Gibt die im aktuellen Request angelegten Bereiche zurück.
+     *
+     * @return array Gruppenschlüssel (z. B. "backendmenue_3") => Icon-Name
+     */
+    public function getAppliedAreas(): array
+    {
+        return $this->appliedAreas;
+    }
+
+    /**
      * Manipuliert die globale BE_MOD-Struktur entsprechend den konfigurierten Bereichen.
      *
      * Als BE_MOD-Gruppenschlüssel dient "backendmenue_<id>" statt des Bereichsnamens,
@@ -177,6 +195,7 @@ class BackendMenuManipulator
 
             $GLOBALS['BE_MOD'][$groupKey] = $groupModules;
             $GLOBALS['TL_LANG']['MOD'][$groupKey] = [$area['name']];
+            $this->appliedAreas[$groupKey] = $area['icon'];
         }
     }
 

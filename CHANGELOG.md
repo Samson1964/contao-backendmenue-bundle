@@ -2,6 +2,17 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.1.0 (2026-08-10)
+
+### Add
+- Icons der Bereiche werden jetzt in der Backend-Navigation angezeigt (per ::before an den Gruppenköpfen, injiziert über den Hook parseBackendTemplate)
+- Font Awesome Free 5.5 (Solid) wird als Webfont mitgeliefert — kein Laden von externen Servern
+- Neuer BackendAssetsListener erzeugt die Icon-CSS-Regeln nur für bekannte Icons (Schutz vor beliebigen Datenbankwerten)
+
+### Change
+- Icon-Listen komplett überarbeitet und gegen die echten Bestände geprüft: 84 Font-Awesome-Icons mit verifizierten Unicode-Codepoints (inkl. Schach-Icons), 48 Contao-Theme-Icons aus der Schnittmenge von 4.13.58 und 5.7.7 — die bisherigen Listen enthielten teils nicht existierende Namen
+- Icon-Auswahl zeigt deutsche Bezeichnungen mit technischem Namen als Suchhilfe
+
 ## 1.0.5 (2026-08-10)
 
 ### Fix

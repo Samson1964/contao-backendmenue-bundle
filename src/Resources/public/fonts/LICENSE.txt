@@ -1,0 +1,9 @@
+Font Awesome Free 5.5.0 (Solid) — Webfont fa-solid-900.woff2
+
+Copyright Fonticons, Inc. (https://fontawesome.com)
+
+Die Schriftdatei steht unter der SIL Open Font License 1.1:
+https://scripts.sil.org/OFL
+
+Die Icon-Namen und Unicode-Zuordnungen entstammen dem offiziellen
+Font-Awesome-Free-Paket (CC BY 4.0 / MIT, siehe fontawesome.com/license/free).

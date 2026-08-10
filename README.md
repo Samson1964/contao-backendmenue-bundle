@@ -58,29 +58,30 @@ $manipulator->manipulateBackendMenu();
 // Das Backend-Menü ist nun neu organisiert
 ```
 
-## Icon-Picker
+## Icons
 
-Das Feld `icon` im Bereich-Formular nutzt einen integrierten Icon-Picker mit Vorschau. Folgende Icon-Formate werden unterstützt:
+Das Icon eines Bereichs wird links neben dem Bereichsnamen in der Backend-Navigation angezeigt. Zwei Icon-Sätze stehen zur Auswahl:
 
-### Font Awesome 6
-- Präfix: `fa-`
-- Beispiele: `fa-tools`, `fa-cog`, `fa-file`, `fa-image`
-- [Vollständige Icon-Liste](https://fontawesome.com/icons)
+### Font Awesome (mitgeliefert)
+- Präfix: `fa-`, z. B. `fa-chess`, `fa-cog`, `fa-trophy`, `fa-users`
+- Die Schrift (Font Awesome Free 5.5, Solid) liegt dem Bundle bei — es wird nichts von externen Servern geladen
+- Gerendert per `::before`-Regel mit eigenem `font-family`-Namen, sodass es keine Konflikte mit einem eventuell vorhandenen Font Awesome gibt
 
 ### Contao Standard Icons
-- Direkt der Icon-Dateiname: `settings.svg`, `page.svg`, `article.svg`
-- Basierend auf: `contao/core-bundle/src/Resources/public/images/`
+- Direkt der Icon-Dateiname: `settings.svg`, `article.svg`, `filemanager.svg`
+- Quelle: Backend-Theme „flexible" (`system/themes/flexible/icons/`)
+- Die Auswahl enthält nur Icons, die in Contao 4.13 **und** 5.7 existieren
 
 ### Beispiel-Icons
 
 | Icon | Beschreibung |
 |------|-------------|
-| `fa-tools` | Werkzeuge |
-| `fa-cube` | Würfel / Block |
-| `fa-layers` | Ebenen |
+| `fa-chess` | Schach |
+| `fa-cog` | Zahnrad |
 | `fa-folder-open` | Offener Ordner |
 | `fa-chart-line` | Diagramm |
 | `settings.svg` | Einstellungen (Contao) |
+| `filemanager.svg` | Dateiverwaltung (Contao) |
 
 ## Datenbank-Tabellen
 
@@ -173,7 +174,8 @@ php -l src/**/*.php
 
 1. **Keine Verschachtelung** — Menübereiche können nicht verschachtelt werden
 2. **Keine Zuordnung von Custom-Modulen** — Nur vordefinierte Module aus `$GLOBALS['BE_MOD']` können zugeordnet werden
-3. **Keine Benutzergruppen-Filterung** — Die Menü-Anpassung gilt für alle Admininstratoren gleich
+3. **Keine Benutzergruppen-Filterung** — Die Menü-Anpassung gilt für alle Benutzer gleich
+4. **Position** — Eigene Bereiche werden hinter den Standardbereichen einsortiert; die Position steuert die Reihenfolge der eigenen Bereiche untereinander
 
 ## Lizenz
 

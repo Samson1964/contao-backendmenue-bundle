@@ -13,7 +13,7 @@ use Schachbulle\BackendMenueBundle\Service\IconProvider;
 class IconProviderTest extends TestCase
 {
     /**
-     * Testet, dass Font Awesome Icons zurückgegeben werden.
+     * Testet, dass Font-Awesome-Icons zurückgegeben werden.
      *
      * @test
      */
@@ -22,14 +22,14 @@ class IconProviderTest extends TestCase
         $provider = new IconProvider();
         $icons = $provider->getFontAwesomeIcons();
 
-        $this->assertIsArray($icons);
         $this->assertNotEmpty($icons);
         $this->assertArrayHasKey('fa-star', $icons);
-        $this->assertArrayHasKey('fa-tools', $icons);
+        $this->assertArrayHasKey('fa-chess', $icons);
+        $this->assertArrayHasKey('fa-wrench', $icons);
     }
 
     /**
-     * Testet, dass Contao Standard Icons zurückgegeben werden.
+     * Testet, dass Contao-Standard-Icons zurückgegeben werden.
      *
      * @test
      */
@@ -38,10 +38,9 @@ class IconProviderTest extends TestCase
         $provider = new IconProvider();
         $icons = $provider->getContaoStandardIcons();
 
-        $this->assertIsArray($icons);
         $this->assertNotEmpty($icons);
         $this->assertArrayHasKey('settings.svg', $icons);
-        $this->assertArrayHasKey('page.svg', $icons);
+        $this->assertArrayHasKey('article.svg', $icons);
     }
 
     /**
@@ -53,11 +52,11 @@ class IconProviderTest extends TestCase
     {
         $provider = new IconProvider();
         $allIcons = $provider->getAllIcons();
-        $fontAwesomeIcons = $provider->getFontAwesomeIcons();
-        $contaoIcons = $provider->getContaoStandardIcons();
 
-        $this->assertIsArray($allIcons);
-        $this->assertCount(\count($fontAwesomeIcons) + \count($contaoIcons), $allIcons);
+        $this->assertCount(
+            \count($provider->getFontAwesomeIcons()) + \count($provider->getContaoStandardIcons()),
+            $allIcons
+        );
     }
 
     /**
@@ -70,9 +69,37 @@ class IconProviderTest extends TestCase
         $provider = new IconProvider();
         $iconsForDca = $provider->getIconsForDca();
 
-        $this->assertIsArray($iconsForDca);
-        $this->assertArrayHasKey('Font Awesome 6', $iconsForDca);
+        $this->assertArrayHasKey('Font Awesome', $iconsForDca);
         $this->assertArrayHasKey('Contao Standard', $iconsForDca);
+    }
+
+    /**
+     * Testet die Codepoint-Auflösung für Font-Awesome-Icons.
+     *
+     * @test
+     */
+    public function testGetFaCodepoint(): void
+    {
+        $provider = new IconProvider();
+
+        $this->assertSame('f005', $provider->getFaCodepoint('fa-star'));
+        $this->assertSame('f439', $provider->getFaCodepoint('fa-chess'));
+        $this->assertNull($provider->getFaCodepoint('settings.svg'));
+        $this->assertNull($provider->getFaCodepoint('fa-unbekannt'));
+    }
+
+    /**
+     * Testet die Pfad-Auflösung für Contao-Standard-Icons.
+     *
+     * @test
+     */
+    public function testGetContaoIconPath(): void
+    {
+        $provider = new IconProvider();
+
+        $this->assertSame('system/themes/flexible/icons/settings.svg', $provider->getContaoIconPath('settings.svg'));
+        $this->assertNull($provider->getContaoIconPath('fa-star'));
+        $this->assertNull($provider->getContaoIconPath('../../../etc/passwd'));
     }
 
     /**
@@ -84,8 +111,8 @@ class IconProviderTest extends TestCase
     {
         $provider = new IconProvider();
 
-        $this->assertEquals('fa-star', $provider->validateIcon('fa-star'));
-        $this->assertEquals('settings.svg', $provider->validateIcon('settings.svg'));
-        $this->assertEquals('', $provider->validateIcon('invalid-icon'));
+        $this->assertSame('fa-star', $provider->validateIcon('fa-star'));
+        $this->assertSame('settings.svg', $provider->validateIcon('settings.svg'));
+        $this->assertSame('', $provider->validateIcon('invalid-icon'));
     }
 }
