@@ -2,6 +2,12 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.0.2 (2026-08-10)
+
+### Fix
+- Behobe "Class Table not found" Fehler durch Refactoring der DCA-Callbacks
+- LoadDataContainerListener für korrekte Hook-Integration
+
 ## 1.0.1 (2026-08-10)
 
 ### Fix
