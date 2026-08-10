@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
     'config' => [
-        'dataContainer' => 'Table',
+        'dataContainer' => 'Contao\DataContainer\Table',
         'ptable' => 'tl_backendmenue_bereiche',
         'sql' => [
             'keys' => [

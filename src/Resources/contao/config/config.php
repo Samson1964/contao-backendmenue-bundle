@@ -10,7 +10,6 @@ $GLOBALS['BE_MOD']['system']['backendmenue_bereiche'] = [
 ];
 
 /**
- * Registriere die Datentabellen für die Datenbank-Verwaltung.
+ * Hook zum Laden der DCA-Dateien.
  */
-$GLOBALS['TL_DCA']['tl_backendmenue_bereiche']['config']['closed'] = false;
-$GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen']['config']['closed'] = false;
+$GLOBALS['TL_HOOKS']['loadDataContainer'][] = ['Schachbulle\BackendMenueBundle\EventListener\LoadDataContainerListener', '__invoke'];

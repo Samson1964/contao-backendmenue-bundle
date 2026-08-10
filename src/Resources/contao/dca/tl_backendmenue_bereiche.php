@@ -6,7 +6,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 
 $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
     'config' => [
-        'dataContainer' => 'Table',
+        'dataContainer' => 'Contao\DataContainer\Table',
         'ctable' => ['tl_backendmenue_zuordnungen'],
         'sql' => [
             'keys' => [
