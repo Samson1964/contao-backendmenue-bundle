@@ -9,4 +9,5 @@ services:
     exclude:
       - '../../BackendMenueBundle.php'
       - '../../ContaoManager/'
+      - '../../DependencyInjection/'
       - '../../Resources/'

@@ -2,6 +2,11 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.2.1 (2026-08-10)
+
+### Fix
+- Fehlende DependencyInjection-Extension ergänzt: Die services.yaml wurde nie geladen, dadurch waren sämtliche Services, Hooks und DCA-Callbacks des Bundles wirkungslos (leere Icon- und Modul-Auswahl, keine Menü-Manipulation). Verifiziert am lokalen Contao-5.7.7-Prüfstand: alle fünf Services, beide Hooks und alle drei Callbacks sind jetzt im Container registriert.
+
 ## 1.2.0 (2026-08-10)
 
 ### Add
