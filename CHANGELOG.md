@@ -2,6 +2,12 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.0.3 (2026-08-10)
+
+### Fix
+- Contao 5.7 Kompatibilität: DataContainer Namespace vollständig angeben (`Contao\DataContainer\Table`)
+- Behebt "ClassNotFoundError: Attempted to load class Table from global namespace"
+
 ## 1.0.2 (2026-08-10)
 
 ### Fix
