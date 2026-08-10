@@ -2,6 +2,11 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.2.2 (2026-08-10)
+
+### Fix
+- Menü-Manipulation vom Hook `initializeSystem` auf das `MenuEvent` (`contao.backend_menu_build`, Priorität 20) umgestellt: Der Hook feuert nur, wenn `system/tmp` existiert — fehlt das Verzeichnis, blieb die Manipulation stillschweigend aus. Das Event kennt keine solche Bedingung und läuft in Contao 4.13 wie 5.7 unmittelbar vor dem Core-Listener, der das Menü aus BE_MOD baut. End-to-End am lokalen 5.7.7-Prüfstand verifiziert (Bereich erscheint, Modul wird umgehängt, Icon-CSS wird injiziert).
+
 ## 1.2.1 (2026-08-10)
 
 ### Fix

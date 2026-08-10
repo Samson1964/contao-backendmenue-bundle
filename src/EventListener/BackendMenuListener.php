@@ -4,50 +4,51 @@ declare(strict_types=1);
 
 namespace Schachbulle\BackendMenueBundle\EventListener;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
-use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Event\MenuEvent;
 use Schachbulle\BackendMenueBundle\Service\BackendMenuManipulator;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
  * Listener für die Manipulation der Backend-Menüstruktur.
  *
- * Läuft über den Hook "initializeSystem", weil zu diesem Zeitpunkt alle
- * config.php-Dateien der Bundles geladen sind und $GLOBALS['BE_MOD'] damit
- * vollständig befüllt ist — aber noch bevor das Backend-Menü gerendert wird.
- * Der zuvor verwendete Hook "loadBackendModule" existiert in Contao nicht.
+ * Reagiert auf das MenuEvent, mit dem Contao (4.13 wie 5.x) das Backend-Menü
+ * aufbaut. Die Priorität 20 liegt bewusst über der des Core-Listeners
+ * (Priorität 10, baut den Menübaum aus $GLOBALS['BE_MOD']): So wird BE_MOD
+ * umgebaut, unmittelbar bevor der Core daraus das Menü erzeugt.
+ *
+ * Der frühere Weg über den Hook "initializeSystem" hatte eine versteckte
+ * Falle: Contao feuert diesen Hook nur, wenn das Verzeichnis system/tmp
+ * existiert (ContaoFramework::triggerInitializeSystemHook) — fehlt es,
+ * bleibt die Manipulation stillschweigend aus. Das MenuEvent kennt keine
+ * solche Bedingung und feuert außerdem nur bei Backend-Anfragen mit
+ * angemeldetem Benutzer, sodass auch kein Scope-Filter mehr nötig ist.
  */
-#[AsHook('initializeSystem')]
+#[AsEventListener(priority: 20)]
 class BackendMenuListener
 {
     /**
      * Konstruktor mit Dependency Injection.
      *
-     * @param BackendMenuManipulator $manipulator  Der Service zur Menü-Manipulation
-     * @param ScopeMatcher           $scopeMatcher Erkennt, ob die Anfrage ans Backend geht
-     * @param RequestStack           $requestStack Zugriff auf die aktuelle Anfrage
+     * @param BackendMenuManipulator $manipulator Der Service zur Menü-Manipulation
      */
     public function __construct(
         private readonly BackendMenuManipulator $manipulator,
-        private readonly ScopeMatcher $scopeMatcher,
-        private readonly RequestStack $requestStack,
     ) {
     }
 
     /**
-     * Manipuliert das Backend-Menü nach der System-Initialisierung.
+     * Manipuliert BE_MOD, bevor der Core-Listener das Hauptmenü daraus baut.
      *
-     * Läuft nur bei Backend-Anfragen — im Frontend und auf der Kommandozeile
-     * (z. B. cache:warmup) wird nichts getan, damit dort weder unnötige
-     * Datenbankabfragen laufen noch der Cache-Aufbau scheitert.
+     * Das MenuEvent wird auch für das Kopfzeilen-Menü ("headerMenu")
+     * ausgelöst — dort ist nichts zu tun.
+     *
+     * @param MenuEvent $event Das Menü-Ereignis mit Factory und Baum
      *
      * @return void
      */
-    public function __invoke(): void
+    public function __invoke(MenuEvent $event): void
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request || !$this->scopeMatcher->isBackendRequest($request)) {
+        if ('mainMenu' !== $event->getTree()->getName()) {
             return;
         }
 
