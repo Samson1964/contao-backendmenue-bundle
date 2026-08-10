@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
                 'tl_class' => 'w50',
                 'chosen' => true,
             ],
-            'options_callback' => ['tl_backendmenue_zuordnungen', 'getBackendModules'],
+            'options' => [],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'position' => [
@@ -86,45 +86,3 @@ $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
         ],
     ],
 ];
-
-/**
- * Stellt Callback-Methoden für die DCA bereit.
- */
-class tl_backendmenue_zuordnungen extends \Contao\Backend
-{
-    /**
-     * Gibt die Liste der verfügbaren Backend-Module zurück.
-     *
-     * @return array Assoziatives Array mit Modul-Namen als Schlüssel und Wert
-     */
-    public function getBackendModules(): array
-    {
-        $modules = [];
-
-        if (isset($GLOBALS['BE_MOD']) && \is_array($GLOBALS['BE_MOD'])) {
-            foreach ($GLOBALS['BE_MOD'] as $group => $groupModules) {
-                if (\is_array($groupModules)) {
-                    foreach ($groupModules as $moduleName => $moduleConfig) {
-                        $modules[$moduleName] = $moduleName;
-                    }
-                }
-            }
-        }
-
-        \asort($modules);
-
-        return $modules;
-    }
-
-    /**
-     * Rendert eine Modul-Zuordnung in der List-Ansicht.
-     *
-     * @param array $row Die Datensatz-Zeile aus der Datenbank
-     *
-     * @return string HTML für den List-Eintrag
-     */
-    public function listBackendModules(array $row): string
-    {
-        return '<div class="tl_content_left">' . $row['module'] . ' <span style="color:#999;padding-left:3px;">(Position: ' . $row['position'] . ')</span></div>';
-    }
-}

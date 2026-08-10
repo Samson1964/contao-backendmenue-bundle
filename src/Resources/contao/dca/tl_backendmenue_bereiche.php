@@ -88,7 +88,7 @@ $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
                 'chosen' => true,
                 'includeBlankOption' => true,
             ],
-            'options_callback' => ['tl_backendmenue_bereiche', 'getAvailableIcons'],
+            'options' => [],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'position' => [
@@ -103,27 +103,3 @@ $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
         ],
     ],
 ];
-
-/**
- * Stellt Callback-Methoden für die DCA bereit.
- */
-class tl_backendmenue_bereiche extends \Contao\Backend
-{
-    /**
-     * Gibt die verfügbaren Icons für den Icon-Picker zurück.
-     *
-     * Kombiniert Font Awesome 6 und Contao Standard Icons.
-     *
-     * @return array Icons gruppiert nach Kategorie
-     */
-    public function getAvailableIcons(): array
-    {
-        if (!class_exists('\Schachbulle\BackendMenueBundle\Service\IconProvider')) {
-            return [];
-        }
-
-        $iconProvider = new \Schachbulle\BackendMenueBundle\Service\IconProvider();
-
-        return $iconProvider->getIconsForDca();
-    }
-}
