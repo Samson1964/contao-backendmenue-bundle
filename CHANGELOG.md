@@ -2,6 +2,11 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.0.1 (2026-08-10)
+
+### Fix
+- Deutsche Übersetzung für Backend-Modul-Label hinzugefügt
+
 ## 1.0.0 (2026-08-09)
 
 ### Add
