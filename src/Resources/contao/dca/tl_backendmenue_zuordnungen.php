@@ -20,9 +20,11 @@ $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
     'list' => [
         'sorting' => [
             'mode' => 4,
-            'fields' => ['position'],
-            'panelLayout' => 'search,limit',
-            'headerFields' => ['name', 'icon'],
+            // 'sorting' muss das erste Feld sein, sonst schaltet DC_Table die
+            // Drag-&-Drop-Sortierung ab (DC_Table::parentView, 4.13 wie 5.x)
+            'fields' => ['sorting'],
+            'panelLayout' => 'search',
+            'headerFields' => ['name'],
             // child_record_callback liefert DcaCallbackListener::listAssignment() (per #[AsCallback])
         ],
         'global_operations' => [
@@ -38,6 +40,14 @@ $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
                 'icon' => 'edit.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_zuordnungen']['edit'],
             ],
+            // Ohne 'cut' fehlt der Drag-&-Drop-Sortierung ihr Unterbau: Contao
+            // setzt beim Ablegen genau diese Aktion ab (act=paste&mode=cut)
+            'cut' => [
+                'href' => 'act=paste&amp;mode=cut',
+                'icon' => 'cut.svg',
+                'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_zuordnungen']['cut'],
+                'attributes' => 'onclick="Backend.getScrollOffset()"',
+            ],
             'delete' => [
                 'href' => 'act=delete',
                 'icon' => 'delete.svg',
@@ -52,7 +62,9 @@ $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
         ],
     ],
     'palettes' => [
-        'default' => '{general_legend},module,position',
+        // Kein Positionsfeld mehr: Die Reihenfolge wird in der Übersicht
+        // per Drag & Drop festgelegt und in 'sorting' gespeichert
+        'default' => '{general_legend},module',
     ],
     'fields' => [
         'id' => [
@@ -80,16 +92,6 @@ $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
             ],
             // Die Optionen liefert DcaCallbackListener::getModuleOptions() (per #[AsCallback])
             'sql' => "varchar(255) NOT NULL default ''",
-        ],
-        'position' => [
-            'inputType' => 'text',
-            'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_zuordnungen']['position'],
-            'eval' => [
-                'mandatory' => true,
-                'rgxp' => 'natural',
-                'tl_class' => 'w50',
-            ],
-            'sql' => "int(10) unsigned NOT NULL default '0'",
         ],
     ],
 ];

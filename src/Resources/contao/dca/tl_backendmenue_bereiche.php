@@ -26,6 +26,8 @@ $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
         'label' => [
             'fields' => ['name', 'icon', 'position'],
             'showColumns' => true,
+            // Die Spaltenwerte setzt DcaCallbackListener::formatAreaLabel() (per #[AsCallback]),
+            // weil das Icon je nach Typ aus der Bibliothek oder aus einer Datei stammt
         ],
         'global_operations' => [
             'all' => [
@@ -61,7 +63,12 @@ $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
         ],
     ],
     'palettes' => [
-        'default' => '{general_legend},name,icon,position',
+        '__selector__' => ['iconType'],
+        'default' => '{general_legend},name,position;{icon_legend},iconType,iconColor',
+    ],
+    'subpalettes' => [
+        'iconType_library' => 'icon',
+        'iconType_file' => 'iconFile',
     ],
     'fields' => [
         'id' => [
@@ -83,17 +90,52 @@ $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
             ],
             'sql' => "varchar(255) NOT NULL default ''",
         ],
+        'iconType' => [
+            'inputType' => 'select',
+            'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['iconType'],
+            'options' => ['library', 'file'],
+            'reference' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['iconTypes'],
+            'eval' => [
+                'submitOnChange' => true,
+                'tl_class' => 'w50',
+            ],
+            'sql' => "varchar(16) NOT NULL default 'library'",
+        ],
         'icon' => [
             'inputType' => 'select',
             'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['icon'],
             'eval' => [
                 'mandatory' => true,
-                'tl_class' => 'w50',
+                'tl_class' => 'w50 clr',
                 'chosen' => true,
                 'includeBlankOption' => true,
             ],
             // Die Optionen liefert DcaCallbackListener::getIconOptions() (per #[AsCallback])
             'sql' => "varchar(255) NOT NULL default ''",
+        ],
+        'iconFile' => [
+            'inputType' => 'fileTree',
+            'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['iconFile'],
+            'eval' => [
+                'mandatory' => true,
+                'filesOnly' => true,
+                'fieldType' => 'radio',
+                'extensions' => 'svg,png,gif',
+                'tl_class' => 'clr',
+            ],
+            'sql' => 'binary(16) NULL',
+        ],
+        'iconColor' => [
+            'inputType' => 'text',
+            'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['iconColor'],
+            'eval' => [
+                'maxlength' => 6,
+                'colorpicker' => true,
+                'isHexColor' => true,
+                'decodeEntities' => true,
+                'tl_class' => 'w50 wizard',
+            ],
+            'sql' => "varchar(6) NOT NULL default ''",
         ],
         'position' => [
             'inputType' => 'text',

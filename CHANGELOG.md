@@ -2,6 +2,17 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.4.0 (2026-08-10)
+
+### Add
+- Icon-Farbe frei wählbar (Farbwähler im Bereichs-Formular). Bei Bilddateien wird die Farbe per CSS-Maske auf die Silhouette angewendet, sodass sich einfarbige SVGs beliebig umfärben lassen; bleibt das Feld leer, gilt weiterhin die Theme-Farbe
+- Eigenes Icon aus der Dateiverwaltung wählbar (SVG, PNG, GIF) — umschaltbar über das neue Feld „Icon-Herkunft"
+- Reihenfolge der Module per Drag & Drop statt über ein Positionsfeld
+
+### Change
+- Die Modul-Zuordnungen nutzen jetzt das Contao-Standardfeld `sorting`; eine Migration überführt bestehende Positionswerte automatisch, bevor der Schema-Abgleich die alte Spalte entfernt
+- Bereichs-Übersicht zeigt bei eigenen Icons den Dateipfad statt der rohen UUID
+
 ## 1.3.0 (2026-08-10)
 
 ### Add

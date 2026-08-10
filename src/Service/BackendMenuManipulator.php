@@ -17,17 +17,18 @@ use Contao\Database;
 class BackendMenuManipulator
 {
     /**
-     * Nach der Manipulation tatsächlich angelegte Bereiche: Gruppenschlüssel => Icon.
+     * Nach der Manipulation tatsächlich angelegte Bereiche.
      *
-     * Wird vom BackendAssetsListener ausgelesen, um die Icon-CSS-Regeln
-     * für genau diese Gruppen zu erzeugen.
+     * Wird vom BackendAssetsListener ausgelesen, um die Icon-CSS-Regeln für
+     * genau diese Gruppen zu erzeugen. Aufbau je Eintrag:
+     * ['iconType' => 'library'|'file', 'icon' => …, 'iconFile' => UUID|null, 'iconColor' => …]
      */
     private array $appliedAreas = [];
 
     /**
      * Gibt die im aktuellen Request angelegten Bereiche zurück.
      *
-     * @return array Gruppenschlüssel (z. B. "backendmenue_3") => Icon-Name
+     * @return array Gruppenschlüssel (z. B. "backendmenue_3") => Icon-Angaben
      */
     public function getAppliedAreas(): array
     {
@@ -86,19 +87,25 @@ class BackendMenuManipulator
      *
      * @param Database $db Die Contao-Datenbankverbindung
      *
-     * @return array Bereiche nach Position sortiert, Schlüssel = ID,
-     *               Werte: ['name' => ..., 'icon' => ..., 'position' => ...]
+     * @return array Bereiche nach Position sortiert, Schlüssel = ID, Werte:
+     *               ['name', 'iconType', 'icon', 'iconFile', 'iconColor', 'position']
      */
     private function loadCustomAreas(Database $db): array
     {
-        $result = $db->execute('SELECT id, name, icon, position FROM tl_backendmenue_bereiche ORDER BY position, id');
+        $result = $db->execute(
+            'SELECT id, name, iconType, icon, iconFile, iconColor, position
+             FROM tl_backendmenue_bereiche ORDER BY position, id'
+        );
 
         $areas = [];
 
         while ($result->next()) {
             $areas[(int) $result->id] = [
                 'name' => (string) $result->name,
+                'iconType' => (string) ($result->iconType ?: 'library'),
                 'icon' => (string) $result->icon,
+                'iconFile' => $result->iconFile,
+                'iconColor' => (string) $result->iconColor,
                 'position' => (int) $result->position,
             ];
         }
@@ -111,15 +118,18 @@ class BackendMenuManipulator
      *
      * @param Database $db Die Contao-Datenbankverbindung
      *
-     * @return array Liste von ['module' => ..., 'area_id' => ..., 'position' => ...]
+     * Die Reihenfolge stammt aus dem Feld 'sorting', das im Backend per
+     * Drag & Drop gepflegt wird.
+     *
+     * @return array Liste von ['module' => ..., 'area_id' => ...]
      */
     private function loadAssignments(Database $db): array
     {
         $result = $db->execute(
-            'SELECT z.module, z.pid AS area_id, z.position
+            'SELECT z.module, z.pid AS area_id
              FROM tl_backendmenue_zuordnungen z
              INNER JOIN tl_backendmenue_bereiche b ON z.pid = b.id
-             ORDER BY b.position, z.position, z.id'
+             ORDER BY b.position, z.sorting, z.id'
         );
 
         $assignments = [];
@@ -128,7 +138,6 @@ class BackendMenuManipulator
             $assignments[] = [
                 'module' => (string) $result->module,
                 'area_id' => (int) $result->area_id,
-                'position' => (int) $result->position,
             ];
         }
 
@@ -204,7 +213,13 @@ class BackendMenuManipulator
             ];
 
             $GLOBALS['TL_LANG']['MOD'][$groupKey] = [$area['name']];
-            $this->appliedAreas[$groupKey] = $area['icon'];
+
+            $this->appliedAreas[$groupKey] = [
+                'iconType' => $area['iconType'],
+                'icon' => $area['icon'],
+                'iconFile' => $area['iconFile'],
+                'iconColor' => $area['iconColor'],
+            ];
         }
 
         if ([] === $newGroups) {

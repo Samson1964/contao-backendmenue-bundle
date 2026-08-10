@@ -40,12 +40,13 @@ php vendor/bin/contao-console contao:migrate
 #### Module zuordnen
 
 1. Im Bereiche-Listing: Klick auf **Module verwalten** eines Bereichs
-2. Klick auf **Neuen Datensatz erstellen**
-3. Wähle ein Backend-Modul (z.B. `tl_page`, `tl_article`)
-4. Definiere die Position des Moduls im Bereich
-5. **Speichern**
+2. Klick auf **Neu**
+3. Wähle ein Backend-Modul (die Auswahl ist nach den aktuellen Menübereichen gruppiert)
+4. **Speichern**
 
 Das ausgewählte Modul wird nun aus seinem Standardbereich entfernt und unter dem neuen Bereich angezeigt.
+
+Die **Reihenfolge der Module** innerhalb eines Bereichs wird in dieser Übersicht per **Drag & Drop** festgelegt — einfach am Anfasser ziehen. Die Reihenfolge schlägt sofort auf das Backend-Menü durch.
 
 ### Programmgesteuerte Nutzung
 
@@ -62,7 +63,19 @@ $manipulator->manipulateBackendMenu();
 
 ## Icons
 
-Das Icon eines Bereichs wird links neben dem Bereichsnamen in der Backend-Navigation angezeigt. Drei Icon-Sätze stehen zur Auswahl:
+Das Icon eines Bereichs wird links neben dem Bereichsnamen in der Backend-Navigation angezeigt. Unter **Icon-Herkunft** wählst du zwischen einer der mitgelieferten Sammlungen und einer **eigenen Bilddatei**.
+
+### Icon-Farbe
+
+Das Feld **Icon-Farbe** ist optional; bleibt es leer, gilt die Standardfarbe des Backend-Themes. Bei Bilddateien wird die Farbe nicht einfach überlagert, sondern auf die **Silhouette** des Bildes angewendet (CSS-Maske) — ein einfarbiges SVG lässt sich damit beliebig umfärben.
+
+### Eigene Bilddatei
+
+Erlaubt sind **SVG, PNG und GIF** aus der Dateiverwaltung. Am besten quadratisch und einfarbig, dargestellt wird sie in 16 × 16 Pixeln. Wird zusätzlich eine Icon-Farbe gesetzt, dient die Datei als Maske — deshalb sind nur Formate mit Alphakanal zugelassen.
+
+### Mitgelieferte Sammlungen
+
+Drei Icon-Sätze stehen zur Auswahl:
 
 ### Font Awesome 6 (mitgeliefert)
 - Präfix: `fa-`, z. B. `fa-chess`, `fa-gear`, `fa-trophy`, `fa-users`
@@ -104,8 +117,11 @@ Speichert benutzerdefinierte Menübereiche:
 |--------|-----|-------------|
 | `id` | int | Primärschlüssel |
 | `name` | varchar(255) | Name des Bereichs |
-| `icon` | varchar(255) | Icon-Name (Font Awesome oder Contao) |
-| `position` | int | Sortierposition |
+| `iconType` | varchar(16) | `library` (Sammlung) oder `file` (eigene Datei) |
+| `icon` | varchar(255) | Icon-Name aus einer der Sammlungen |
+| `iconFile` | binary(16) | UUID der eigenen Bilddatei |
+| `iconColor` | varchar(6) | Hex-Farbe ohne Raute, leer = Theme-Standard |
+| `position` | int | Position im Backend-Menü (1 = ganz oben) |
 | `tstamp` | int | Änderungszeitstempel |
 | `sorting` | int | Interne Sortierung |
 
@@ -118,9 +134,8 @@ Verknüpft Backend-Module zu benutzerdefinierten Bereichen:
 | `id` | int | Primärschlüssel |
 | `pid` | int | Foreign Key → `tl_backendmenue_bereiche` |
 | `module` | varchar(255) | Name des Backend-Moduls |
-| `position` | int | Sortierposition im Bereich |
 | `tstamp` | int | Änderungszeitstempel |
-| `sorting` | int | Interne Sortierung |
+| `sorting` | int | Reihenfolge im Bereich (per Drag & Drop gepflegt) |
 
 ## Architektur
 
