@@ -9,9 +9,4 @@ services:
     exclude:
       - '../../BackendMenueBundle.php'
       - '../../ContaoManager/'
-
-  Schachbulle\BackendMenueBundle\Service\BackendMenuManipulator:
-    public: true
-
-  Schachbulle\BackendMenueBundle\Service\IconProvider:
-    public: true
+      - '../../Resources/'

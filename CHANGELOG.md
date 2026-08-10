@@ -2,6 +2,22 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.0.5 (2026-08-10)
+
+### Fix
+- DataContainer-Klasse korrigiert: `Contao\DC_Table` statt der nicht existierenden Klasse `Contao\DataContainer\Table` (behebt den ClassNotFoundError endgültig, kompatibel mit 4.13 und 5.x)
+- Attribut-Namespace korrigiert: `Contao\CoreBundle\DependencyInjection\Attribute` statt des nicht existierenden `Contao\CoreBundle\Attributes` — die Hooks wurden dadurch nie registriert
+- Menü-Manipulation auf den real existierenden Hook `initializeSystem` umgestellt (der Hook `loadBackendModule` existiert in Contao nicht); läuft nur noch bei Backend-Anfragen
+- Verwaisten `child_record_callback` auf gelöschte Inline-Klasse durch `#[AsCallback]`-Listener ersetzt (DcaCallbackListener, liefert auch Icon- und Modul-Optionen)
+- Logikfehler im BackendMenuManipulator: Module wurden erst aus dem Menü entfernt und dann gesucht — umgehängte Module gingen dadurch komplett verloren
+- BE_MOD-Gruppenschlüssel auf `backendmenue_<id>` umgestellt (Bereichsnamen mit Leerzeichen/Umlauten zerstörten als CSS-Klasse das Backend-Markup)
+- Schutz vor fehlenden Tabellen: Vor der ersten Migration bleibt das Backend nutzbar
+
+### Change
+- Operationen nach Konvention: `edit` öffnet die Modul-Zuordnungen, `editheader` bearbeitet den Bereich
+- PHP-Anforderung ehrlich auf `^8.1` gesetzt (readonly-Promotion); `contao/manager-plugin` als Abhängigkeit ergänzt
+- Ungenutzte SQL-Datei entfernt (das Schema stammt vollständig aus den DCA-Definitionen)
+
 ## 1.0.4 (2026-08-10)
 
 ### Fix

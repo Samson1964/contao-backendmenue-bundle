@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Schachbulle\BackendMenueBundle\Tests\Service;
 
-use Contao\Database;
-use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\TestCase;
 use Schachbulle\BackendMenueBundle\Service\BackendMenuManipulator;
 
 /**
  * Tests für den BackendMenuManipulator Service.
+ *
+ * Ohne gebooteten Contao-Container schlägt der Datenbankzugriff im Manipulator
+ * fehl und wird geschluckt — die Tests prüfen genau dieses Verhalten: Das Menü
+ * bleibt in jedem Fehlerfall unverändert.
  */
-class BackendMenuManipulatorTest extends ContaoTestCase
+class BackendMenuManipulatorTest extends TestCase
 {
     /**
      * Testet, dass der Manipulator nichts tut, wenn BE_MOD nicht initialisiert ist.

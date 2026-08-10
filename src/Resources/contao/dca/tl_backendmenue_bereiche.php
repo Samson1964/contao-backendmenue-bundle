@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\DC_Table;
 
 $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
     'config' => [
-        'dataContainer' => 'Contao\DataContainer\Table',
+        // FQCN statt Kurzname 'Table': Der Kurzname wurde in Contao 5 entfernt,
+        // die Klasse DC_Table gibt es in 4.13 und 5.x gleichermaßen
+        'dataContainer' => DC_Table::class,
         'ctable' => ['tl_backendmenue_zuordnungen'],
         'sql' => [
             'keys' => [
@@ -18,12 +20,12 @@ $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
         'sorting' => [
             'mode' => 1,
             'fields' => ['position'],
+            'flag' => 11,
             'panelLayout' => 'search,limit',
         ],
         'label' => [
-            'fields' => ['name', 'icon'],
+            'fields' => ['name', 'icon', 'position'],
             'showColumns' => true,
-            'format' => '%s [%s]',
         ],
         'global_operations' => [
             'all' => [
@@ -33,21 +35,23 @@ $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
             ],
         ],
         'operations' => [
+            // Konvention: 'edit' springt in die Kindtabelle, 'editheader' bearbeitet
+            // den Datensatz selbst (keine 'children'-Operation, siehe Projektrichtlinien)
             'edit' => [
-                'href' => 'act=edit',
+                'href' => 'table=tl_backendmenue_zuordnungen',
                 'icon' => 'edit.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['edit'],
             ],
-            'children' => [
-                'href' => 'table=tl_backendmenue_zuordnungen',
-                'icon' => 'edit.svg',
-                'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['children'],
+            'editheader' => [
+                'href' => 'act=edit',
+                'icon' => 'header.svg',
+                'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['editheader'],
             ],
             'delete' => [
                 'href' => 'act=delete',
                 'icon' => 'delete.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['delete'],
-                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset();"',
+                'attributes' => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\'))return false;Backend.getScrollOffset();"',
             ],
             'show' => [
                 'href' => 'act=show',
@@ -88,7 +92,7 @@ $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
                 'chosen' => true,
                 'includeBlankOption' => true,
             ],
-            'options' => [],
+            // Die Optionen liefert DcaCallbackListener::getIconOptions() (per #[AsCallback])
             'sql' => "varchar(255) NOT NULL default ''",
         ],
         'position' => [
