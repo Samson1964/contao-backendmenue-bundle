@@ -13,9 +13,9 @@ use Schachbulle\BackendMenueBundle\Service\IconProvider;
  *
  * Die Gruppenköpfe der Backend-Navigation tragen in Contao 4.13 und 5.x die
  * CSS-Klasse "group-<schlüssel>" (gesetzt in BackendUser::navigation()); darüber
- * bekommt jeder Bereich sein Icon als ::before-Element. Font-Awesome-Icons werden
- * über die mitgelieferte Schrift gerendert, Contao-Icons als SVG-Hintergrundbild
- * aus dem "flexible"-Backend-Theme.
+ * bekommt jeder Bereich sein Icon als ::before-Element. Font-Awesome- und
+ * Lucide-Icons werden über die mitgelieferten Schriften gerendert, Contao-Icons
+ * als SVG-Hintergrundbild aus dem "flexible"-Backend-Theme.
  *
  * Der Hook "parseBackendTemplate" existiert in beiden Contao-Fassungen; die
  * Hauptseite läuft dort als Template "be_main" durch. Relative URLs im
@@ -60,17 +60,28 @@ class BackendAssetsListener
         }
 
         $rules = [];
-        $needsFont = false;
+        $needsFaFont = false;
+        $needsLucideFont = false;
 
         foreach ($areas as $groupKey => $icon) {
             $selector = '#tl_navigation a.group-' . $groupKey . '::before';
-            $codepoint = $this->iconProvider->getFaCodepoint($icon);
+            $faCodepoint = $this->iconProvider->getFaCodepoint($icon);
 
-            if (null !== $codepoint) {
-                $needsFont = true;
-                $rules[] = $selector . '{content:"\\' . $codepoint . '";font-family:"backendmenue-icons";'
+            if (null !== $faCodepoint) {
+                $needsFaFont = true;
+                $rules[] = $selector . '{content:"\\' . $faCodepoint . '";font-family:"backendmenue-fa";'
                     . 'font-weight:900;font-style:normal;display:inline-block;width:18px;margin-right:4px;'
                     . 'text-align:center;line-height:1;}';
+                continue;
+            }
+
+            $lucideCodepoint = $this->iconProvider->getLucideCodepoint($icon);
+
+            if (null !== $lucideCodepoint) {
+                $needsLucideFont = true;
+                $rules[] = $selector . '{content:"\\' . $lucideCodepoint . '";font-family:"backendmenue-lucide";'
+                    . 'font-weight:400;font-style:normal;display:inline-block;width:18px;margin-right:4px;'
+                    . 'text-align:center;line-height:1;vertical-align:-1px;}';
                 continue;
             }
 
@@ -89,12 +100,17 @@ class BackendAssetsListener
 
         $css = '';
 
-        // Die Schrift nur laden, wenn mindestens ein Font-Awesome-Icon gebraucht wird;
-        // der eigene font-family-Name verhindert Kollisionen mit einem eventuell
-        // bereits eingebundenen Font Awesome
-        if ($needsFont) {
-            $css .= '@font-face{font-family:"backendmenue-icons";font-weight:900;font-style:normal;'
+        // Die Schriften nur laden, wenn sie tatsächlich gebraucht werden; die eigenen
+        // font-family-Namen verhindern Kollisionen mit eventuell bereits
+        // eingebundenen Icon-Schriften
+        if ($needsFaFont) {
+            $css .= '@font-face{font-family:"backendmenue-fa";font-weight:900;font-style:normal;'
                 . 'font-display:block;src:url("bundles/backendmenue/fonts/fa-solid-900.woff2") format("woff2");}';
+        }
+
+        if ($needsLucideFont) {
+            $css .= '@font-face{font-family:"backendmenue-lucide";font-weight:400;font-style:normal;'
+                . 'font-display:block;src:url("bundles/backendmenue/fonts/lucide.woff2") format("woff2");}';
         }
 
         $style = "\n<style>/* contao-backendmenue-bundle */\n" . $css . implode("\n", $rules) . "\n</style>\n";

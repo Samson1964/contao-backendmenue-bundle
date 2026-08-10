@@ -60,26 +60,33 @@ $manipulator->manipulateBackendMenu();
 
 ## Icons
 
-Das Icon eines Bereichs wird links neben dem Bereichsnamen in der Backend-Navigation angezeigt. Zwei Icon-Sätze stehen zur Auswahl:
+Das Icon eines Bereichs wird links neben dem Bereichsnamen in der Backend-Navigation angezeigt. Drei Icon-Sätze stehen zur Auswahl:
 
-### Font Awesome (mitgeliefert)
-- Präfix: `fa-`, z. B. `fa-chess`, `fa-cog`, `fa-trophy`, `fa-users`
-- Die Schrift (Font Awesome Free 5.5, Solid) liegt dem Bundle bei — es wird nichts von externen Servern geladen
-- Gerendert per `::before`-Regel mit eigenem `font-family`-Namen, sodass es keine Konflikte mit einem eventuell vorhandenen Font Awesome gibt
+### Font Awesome 6 (mitgeliefert)
+- Präfix: `fa-`, z. B. `fa-chess`, `fa-gear`, `fa-trophy`, `fa-users`
+- Die Schrift (Font Awesome Free 6.7.2, Solid) liegt dem Bundle bei — es wird nichts von externen Servern geladen
+- Alt-Namen aus Font Awesome 5 (z. B. `fa-cog`, `fa-search`) werden automatisch auf ihre FA6-Entsprechung aufgelöst
+
+### Lucide (mitgeliefert)
+- Präfix: `lucide-`, z. B. `lucide-crown`, `lucide-settings`, `lucide-swords`
+- Die Schrift stammt aus dem offiziellen lucide-static-Paket (ISC-Lizenz) und liegt dem Bundle bei
+- Feiner Outline-Stil, der gut zur Contao-5-Optik passt
 
 ### Contao Standard Icons
 - Direkt der Icon-Dateiname: `settings.svg`, `article.svg`, `filemanager.svg`
 - Quelle: Backend-Theme „flexible" (`system/themes/flexible/icons/`)
 - Die Auswahl enthält nur Icons, die in Contao 4.13 **und** 5.7 existieren
 
+Alle Icon-Schriften werden per `::before`-Regel mit eigenen `font-family`-Namen gerendert, sodass es keine Konflikte mit eventuell vorhandenen Icon-Schriften gibt. Geladen wird eine Schrift nur, wenn mindestens ein Bereich sie tatsächlich nutzt.
+
 ### Beispiel-Icons
 
 | Icon | Beschreibung |
 |------|-------------|
-| `fa-chess` | Schach |
-| `fa-cog` | Zahnrad |
-| `fa-folder-open` | Offener Ordner |
-| `fa-chart-line` | Diagramm |
+| `fa-chess` | Schach (FA6) |
+| `fa-gear` | Zahnrad (FA6) |
+| `lucide-crown` | Krone (Lucide) |
+| `lucide-swords` | Schwerter (Lucide) |
 | `settings.svg` | Einstellungen (Contao) |
 | `filemanager.svg` | Dateiverwaltung (Contao) |
 

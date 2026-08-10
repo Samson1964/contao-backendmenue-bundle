@@ -1,9 +1,8 @@
-Font Awesome Free 5.5.0 (Solid) — Webfont fa-solid-900.woff2
-
+fa-solid-900.woff2 — Font Awesome Free 6.7.2 (Solid)
 Copyright Fonticons, Inc. (https://fontawesome.com)
+Schriftdatei unter SIL Open Font License 1.1: https://scripts.sil.org/OFL
+Icons CC BY 4.0, CSS MIT — siehe https://fontawesome.com/license/free
 
-Die Schriftdatei steht unter der SIL Open Font License 1.1:
-https://scripts.sil.org/OFL
-
-Die Icon-Namen und Unicode-Zuordnungen entstammen dem offiziellen
-Font-Awesome-Free-Paket (CC BY 4.0 / MIT, siehe fontawesome.com/license/free).
+lucide.woff2 — Lucide Icons (https://lucide.dev)
+Copyright Lucide Contributors; basiert auf Feather Icons (Copyright Cole Bemis)
+Lizenz: ISC — https://lucide.dev/license

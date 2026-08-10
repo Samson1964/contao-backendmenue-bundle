@@ -2,6 +2,16 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.2.0 (2026-08-10)
+
+### Add
+- Lucide-Icons als dritter Icon-Satz (132 Icons, Schrift aus dem offiziellen lucide-static-Paket, ISC-Lizenz)
+- FA5-Alt-Namen (z. B. `fa-cog`, `fa-search`) werden automatisch auf ihre FA6-Entsprechung aufgelöst — bestehende Datenbankwerte bleiben gültig
+
+### Change
+- Font Awesome von 5.5 auf 6.7.2 aktualisiert (92 Icons mit kanonischen FA6-Namen, Codepoints aus der Original-CSS extrahiert)
+- Icon-Schriften werden weiterhin nur geladen, wenn mindestens ein Bereich sie nutzt
+
 ## 1.1.0 (2026-08-10)
 
 ### Add

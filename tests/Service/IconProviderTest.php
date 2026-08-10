@@ -44,6 +44,21 @@ class IconProviderTest extends TestCase
     }
 
     /**
+     * Testet, dass Lucide-Icons zurückgegeben werden.
+     *
+     * @test
+     */
+    public function testGetLucideIcons(): void
+    {
+        $provider = new IconProvider();
+        $icons = $provider->getLucideIcons();
+
+        $this->assertNotEmpty($icons);
+        $this->assertArrayHasKey('lucide-crown', $icons);
+        $this->assertArrayHasKey('lucide-settings', $icons);
+    }
+
+    /**
      * Testet, dass alle Icons kombiniert zurückgegeben werden.
      *
      * @test
@@ -54,7 +69,9 @@ class IconProviderTest extends TestCase
         $allIcons = $provider->getAllIcons();
 
         $this->assertCount(
-            \count($provider->getFontAwesomeIcons()) + \count($provider->getContaoStandardIcons()),
+            \count($provider->getFontAwesomeIcons())
+                + \count($provider->getLucideIcons())
+                + \count($provider->getContaoStandardIcons()),
             $allIcons
         );
     }
@@ -69,12 +86,13 @@ class IconProviderTest extends TestCase
         $provider = new IconProvider();
         $iconsForDca = $provider->getIconsForDca();
 
-        $this->assertArrayHasKey('Font Awesome', $iconsForDca);
+        $this->assertArrayHasKey('Font Awesome 6', $iconsForDca);
+        $this->assertArrayHasKey('Lucide', $iconsForDca);
         $this->assertArrayHasKey('Contao Standard', $iconsForDca);
     }
 
     /**
-     * Testet die Codepoint-Auflösung für Font-Awesome-Icons.
+     * Testet die Codepoint-Auflösung für Font-Awesome-Icons inklusive FA5-Aliassen.
      *
      * @test
      */
@@ -84,8 +102,28 @@ class IconProviderTest extends TestCase
 
         $this->assertSame('f005', $provider->getFaCodepoint('fa-star'));
         $this->assertSame('f439', $provider->getFaCodepoint('fa-chess'));
+
+        // FA5-Alt-Namen müssen auf den FA6-Codepoint aufgelöst werden
+        $this->assertSame('f013', $provider->getFaCodepoint('fa-cog'));
+        $this->assertSame('f002', $provider->getFaCodepoint('fa-search'));
+
         $this->assertNull($provider->getFaCodepoint('settings.svg'));
         $this->assertNull($provider->getFaCodepoint('fa-unbekannt'));
+    }
+
+    /**
+     * Testet die Codepoint-Auflösung für Lucide-Icons.
+     *
+     * @test
+     */
+    public function testGetLucideCodepoint(): void
+    {
+        $provider = new IconProvider();
+
+        $this->assertSame('e1d6', $provider->getLucideCodepoint('lucide-crown'));
+        $this->assertSame('e154', $provider->getLucideCodepoint('lucide-settings'));
+        $this->assertNull($provider->getLucideCodepoint('fa-star'));
+        $this->assertNull($provider->getLucideCodepoint('lucide-unbekannt'));
     }
 
     /**
