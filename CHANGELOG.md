@@ -2,6 +2,13 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.0.4 (2026-08-10)
+
+### Fix
+- Entferne manuelle Hook-Registrierung die zu Dependency-Injection-Fehlern führt
+- Nutze Symfony `#[AsHook]` Attribute für korrekte Hook-Integration
+- Behebt "ArgumentCountError: Too few arguments" beim cache:warmup
+
 ## 1.0.3 (2026-08-10)
 
 ### Fix
