@@ -2,6 +2,15 @@
 
 Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
 
+## 1.3.0 (2026-08-10)
+
+### Add
+- Bedienhinweis in der Bereichs-Übersicht: Ein Bereich erscheint erst im Menü, wenn ihm mindestens ein Modul zugeordnet wurde
+- Die Position zählt jetzt über das Gesamtmenü: 1 = ganz oben (vor den Standardbereichen), 2 = zweite Stelle usw.; größere Werte hängen den Bereich ans Ende
+
+### Fix
+- Bereichsname war gegenüber den Standardbereichen nach rechts eingerückt: Icons liegen jetzt exakt im Icon-Raster der Backend-Themes (background bei 3px 2px für SVGs, absolut positioniertes ::before für Schrift-Glyphen) statt als Inline-Element vor dem Text
+
 ## 1.2.2 (2026-08-10)
 
 ### Fix

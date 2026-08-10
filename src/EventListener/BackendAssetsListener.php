@@ -63,34 +63,42 @@ class BackendAssetsListener
         $needsFaFont = false;
         $needsLucideFont = false;
 
+        // Beide Backend-Themes (4.13 wie 5.7) reservieren am Gruppenkopf per
+        // padding-left einen Icon-Platz und legen die Icons der Standardbereiche
+        // als background bei "3px 2px" hinein. Dieses Muster wird hier exakt
+        // nachgebildet: SVG-Icons als background auf dem Link selbst, Schrift-
+        // Glyphen als absolut positioniertes ::before im selben Raster — beides
+        // ohne Einfluss auf den Textfluss, damit der Bereichsname bündig mit
+        // den Standardbereichen steht.
         foreach ($areas as $groupKey => $icon) {
-            $selector = '#tl_navigation a.group-' . $groupKey . '::before';
+            $link = '#tl_navigation a.group-' . $groupKey;
             $faCodepoint = $this->iconProvider->getFaCodepoint($icon);
-
-            if (null !== $faCodepoint) {
-                $needsFaFont = true;
-                $rules[] = $selector . '{content:"\\' . $faCodepoint . '";font-family:"backendmenue-fa";'
-                    . 'font-weight:900;font-style:normal;display:inline-block;width:18px;margin-right:4px;'
-                    . 'text-align:center;line-height:1;}';
-                continue;
-            }
-
             $lucideCodepoint = $this->iconProvider->getLucideCodepoint($icon);
 
-            if (null !== $lucideCodepoint) {
-                $needsLucideFont = true;
-                $rules[] = $selector . '{content:"\\' . $lucideCodepoint . '";font-family:"backendmenue-lucide";'
-                    . 'font-weight:400;font-style:normal;display:inline-block;width:18px;margin-right:4px;'
-                    . 'text-align:center;line-height:1;vertical-align:-1px;}';
+            if (null !== $faCodepoint || null !== $lucideCodepoint) {
+                if (null !== $faCodepoint) {
+                    $needsFaFont = true;
+                    $font = 'backendmenue-fa';
+                    $weight = 900;
+                    $codepoint = $faCodepoint;
+                } else {
+                    $needsLucideFont = true;
+                    $font = 'backendmenue-lucide';
+                    $weight = 400;
+                    $codepoint = $lucideCodepoint;
+                }
+
+                $rules[] = $link . '{position:relative}';
+                $rules[] = $link . '::before{content:"\\' . $codepoint . '";font-family:"' . $font . '";'
+                    . 'font-weight:' . $weight . ';font-style:normal;position:absolute;left:3px;top:2px;'
+                    . 'width:16px;height:16px;font-size:13px;line-height:16px;text-align:center;}';
                 continue;
             }
 
             $path = $this->iconProvider->getContaoIconPath($icon);
 
             if (null !== $path) {
-                $rules[] = $selector . '{content:"";display:inline-block;width:14px;height:14px;'
-                    . 'margin-right:6px;vertical-align:-2px;'
-                    . 'background:url("' . $path . '") center/contain no-repeat;}';
+                $rules[] = $link . '{background:url("' . $path . '") 3px 2px no-repeat;background-size:16px 16px;}';
             }
         }
 

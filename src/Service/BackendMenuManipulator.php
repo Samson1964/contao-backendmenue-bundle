@@ -77,7 +77,7 @@ class BackendMenuManipulator
         // lösen — in dieser Reihenfolge, weil nach dem Entfernen nichts mehr auffindbar wäre
         $extracted = $this->extractAssignedModules($assignments);
 
-        $this->appendCustomAreas($areas, $assignments, $extracted);
+        $this->insertCustomAreas($areas, $assignments, $extracted);
         $this->removeEmptyGroups();
     }
 
@@ -164,10 +164,13 @@ class BackendMenuManipulator
     }
 
     /**
-     * Hängt die benutzerdefinierten Bereiche mit ihren Modulen ans Menü an.
+     * Fügt die benutzerdefinierten Bereiche an ihrer Wunschposition ins Menü ein.
      *
-     * Registriert zugleich die Anzeigenamen der Bereiche in TL_LANG, weil es
-     * für dynamische Bereiche naturgemäß keine Sprachdatei gibt.
+     * Die Position zählt über das Gesamtmenü: 1 setzt den Bereich ganz nach
+     * oben (vor die Standardbereiche), 2 an die zweite Stelle usw.; Werte
+     * über der Gruppenanzahl hängen den Bereich ans Ende. Registriert zugleich
+     * die Anzeigenamen der Bereiche in TL_LANG, weil es für dynamische
+     * Bereiche naturgemäß keine Sprachdatei gibt.
      *
      * @param array $areas       Die Bereiche aus loadCustomAreas()
      * @param array $assignments Die Zuordnungen aus loadAssignments()
@@ -175,8 +178,12 @@ class BackendMenuManipulator
      *
      * @return void
      */
-    private function appendCustomAreas(array $areas, array $assignments, array $extracted): void
+    private function insertCustomAreas(array $areas, array $assignments, array $extracted): void
     {
+        // Neue Gruppen samt Modulen aufbauen; Bereiche ohne auffindbare Module
+        // überspringen — eine leere Gruppe würde Contao ohnehin ausblenden
+        $newGroups = [];
+
         foreach ($areas as $areaId => $area) {
             $groupKey = 'backendmenue_' . $areaId;
             $groupModules = [];
@@ -187,16 +194,42 @@ class BackendMenuManipulator
                 }
             }
 
-            // Bereiche ohne auffindbare Module nicht anlegen — eine leere
-            // Gruppe würde im Backend nur als toter Menüpunkt erscheinen
             if ([] === $groupModules) {
                 continue;
             }
 
-            $GLOBALS['BE_MOD'][$groupKey] = $groupModules;
+            $newGroups[$groupKey] = [
+                'modules' => $groupModules,
+                'position' => $area['position'],
+            ];
+
             $GLOBALS['TL_LANG']['MOD'][$groupKey] = [$area['name']];
             $this->appliedAreas[$groupKey] = $area['icon'];
         }
+
+        if ([] === $newGroups) {
+            return;
+        }
+
+        // Reihenfolge bestimmen: bestehende Gruppen behalten ihre Ordnung,
+        // jede neue Gruppe wird an ihrem (1-basierten) Wunschindex eingefügt
+        $order = array_keys($GLOBALS['BE_MOD']);
+
+        uasort($newGroups, static fn (array $a, array $b): int => $a['position'] <=> $b['position']);
+
+        foreach ($newGroups as $groupKey => $group) {
+            $index = min(max($group['position'], 1) - 1, \count($order));
+            array_splice($order, $index, 0, [$groupKey]);
+        }
+
+        // BE_MOD in der neuen Reihenfolge zusammensetzen
+        $reordered = [];
+
+        foreach ($order as $groupKey) {
+            $reordered[$groupKey] = $newGroups[$groupKey]['modules'] ?? $GLOBALS['BE_MOD'][$groupKey];
+        }
+
+        $GLOBALS['BE_MOD'] = $reordered;
     }
 
     /**

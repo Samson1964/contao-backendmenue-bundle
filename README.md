@@ -28,12 +28,14 @@ php vendor/bin/contao-console contao:migrate
 
 ### Im Backend
 
-1. Öffne **System → Backend-Menübereiche**
-2. Klicke auf **Neuen Datensatz erstellen**
+1. Öffne **System → Eigenes Backend-Menü**
+2. Klicke auf **Neu**
 3. Gib einen Namen für den Bereich ein (z.B. „Meine Tools")
-4. Wähle ein Icon (Font Awesome 6, z.B. `fa-tools`)
-5. Definiere die Position (Sortierposition im Menü)
+4. Wähle ein Icon (Font Awesome 6, Lucide oder Contao Standard)
+5. Definiere die Position im Backend-Menü: **1 = ganz oben**, 2 = an zweiter Stelle usw.; größere Werte hängen den Bereich ans Ende
 6. **Speichern**
+
+> **Wichtig:** Ein Bereich erscheint erst dann im Backend-Menü, wenn ihm über „Module verwalten" mindestens ein Modul zugeordnet wurde — leere Gruppen blendet Contao grundsätzlich aus. Ein entsprechender Hinweis wird auch in der Bereichs-Übersicht angezeigt.
 
 #### Module zuordnen
 
@@ -182,7 +184,6 @@ php -l src/**/*.php
 1. **Keine Verschachtelung** — Menübereiche können nicht verschachtelt werden
 2. **Keine Zuordnung von Custom-Modulen** — Nur vordefinierte Module aus `$GLOBALS['BE_MOD']` können zugeordnet werden
 3. **Keine Benutzergruppen-Filterung** — Die Menü-Anpassung gilt für alle Benutzer gleich
-4. **Position** — Eigene Bereiche werden hinter den Standardbereichen einsortiert; die Position steuert die Reihenfolge der eigenen Bereiche untereinander
 
 ## Lizenz
 

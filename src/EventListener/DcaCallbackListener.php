@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Schachbulle\BackendMenueBundle\EventListener;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\Input;
+use Contao\Message;
 use Contao\StringUtil;
 use Schachbulle\BackendMenueBundle\Service\IconProvider;
 
@@ -25,6 +27,29 @@ class DcaCallbackListener
     public function __construct(
         private readonly IconProvider $iconProvider,
     ) {
+    }
+
+    /**
+     * Zeigt in der Bereichs-Übersicht einen Bedienhinweis an.
+     *
+     * Ein Bereich erscheint erst im Backend-Menü, wenn ihm mindestens ein
+     * Modul zugeordnet wurde — das ist gewolltes Verhalten (Contao blendet
+     * leere Gruppen aus), aber ohne Hinweis ein Stolperstein. Die Meldung
+     * erscheint nur in der Listenansicht, nicht in den Bearbeitungsformularen.
+     *
+     * @return void
+     */
+    #[AsCallback(table: 'tl_backendmenue_bereiche', target: 'config.onload')]
+    public function addUsageHint(): void
+    {
+        if ('' !== (string) Input::get('act')) {
+            return;
+        }
+
+        Message::addInfo(
+            $GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['usageHint']
+                ?? 'Ein Bereich erscheint erst dann im Backend-Menü, wenn ihm über „Module verwalten" mindestens ein Modul zugeordnet wurde.'
+        );
     }
 
     /**
