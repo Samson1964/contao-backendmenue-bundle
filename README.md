@@ -1,13 +1,15 @@
 # Backend-Menü-Bundle für Contao 4.13 & 5.7
 
-Erweiterung für **Contao 4.13** und **Contao 5.7** zur Verwaltung benutzerdefinierter Bereiche in der Backend-Menüspalte. Administratoren können neue Menübereiche mit eigenen Namen, Icons und Positionen anlegen sowie einzelne Backend-Module zwischen diesen Bereichen verschieben.
+Erweiterung für **Contao 4.13** und **Contao 5.7** zur Verwaltung eigener Bereiche in der Backend-Menüspalte. Bereiche tragen einen eigenen Namen, ein Icon in frei wählbarer Farbe und eine Position; beliebige Backend-Module lassen sich darin zusammenfassen. Bereiche gelten entweder global für alle Benutzer oder persönlich für einzelne — und jeder Benutzer kann die globalen Bereiche für seinen Zugang abschalten.
 
 ## Features
 
-✅ **Benutzerdefinierte Menübereiche** — Erstelle beliebig viele neue Bereiche im Backend-Menü  
-✅ **Frei konfigurierbare Icons** — Nutze Font Awesome 6 oder Contao-Standard-Icons  
-✅ **Module umsortieren** — Verschiebe Backend-Module aus Standardbereichen in neue Bereiche  
-✅ **Sortierbarkeit** — Definiere die Reihenfolge von Bereichen und Modulen  
+✅ **Eigene Menübereiche** — Beliebig viele neue Bereiche im Backend-Menü  
+✅ **Global oder persönlich** — Bereiche für alle, oder nur für einzelne Benutzer  
+✅ **Abschaltbar** — Jeder Benutzer kann die globalen Bereiche in seinem Profil ausblenden  
+✅ **Frei konfigurierbare Icons** — Font Awesome 6, Lucide, Contao-Icons oder eigene Bilddatei, mit wählbarer Farbe  
+✅ **Module umsortieren** — Backend-Module aus den Standardbereichen in eigene Bereiche verschieben  
+✅ **Drag & Drop** — Reihenfolge der Module mit der Maus festlegen  
 ✅ **Standardbereiche erhalten** — Alle Standard-Menübereiche (System, Inhalte etc.) bleiben bestehen  
 ✅ **Kompatibilität** — Läuft unter Contao 4.13 LTS und 5.7 LTS  
 
@@ -47,6 +49,26 @@ php vendor/bin/contao-console contao:migrate
 Das ausgewählte Modul wird nun aus seinem Standardbereich entfernt und unter dem neuen Bereich angezeigt.
 
 Die **Reihenfolge der Module** innerhalb eines Bereichs wird in dieser Übersicht per **Drag & Drop** festgelegt — einfach am Anfasser ziehen. Die Reihenfolge schlägt sofort auf das Backend-Menü durch.
+
+### Globale und persönliche Bereiche
+
+Unter **Geltung** wird festgelegt, für wen ein Bereich gilt:
+
+- **Global** — der Bereich erscheint bei allen Benutzern, sofern sie die globalen Bereiche nicht in ihrem Profil ausgeblendet haben.
+- **Persönlich** — der Bereich erscheint nur bei den ausgewählten Benutzern. Diese dürfen ihn auch selbst bearbeiten.
+
+Jeder Benutzer kann in seinem Profil (**Benutzerprofil → Backend-Einstellungen**) die Einstellung **„Globale Menübereiche ausblenden"** setzen. Dann gelten für ihn nur noch seine persönlichen Bereiche; die Module der globalen Bereiche bleiben in ihren ursprünglichen Menübereichen. Administratoren können denselben Schalter in der Benutzerverwaltung setzen.
+
+#### Benutzer verwalten ihre Bereiche selbst
+
+Ein Benutzer ohne Administratorrechte sieht im Modul ausschließlich seine eigenen Bereiche und kann nur diese bearbeiten; legt er einen neuen an, gehört dieser automatisch ihm. Die Geltung ist für ihn nicht einstellbar. Administratoren sehen und bearbeiten alle Bereiche.
+
+Damit ein Benutzer ohne Administratorrechte das Modul nutzen kann, braucht er in seiner Benutzergruppe (oder in seinen eigenen Rechten) **zwei** Freigaben:
+
+1. **Module** → „Eigenes Backend-Menü"
+2. **Datensatzrechte** → für `tl_backendmenue_bereiche` und `tl_backendmenue_zuordnungen` jeweils Anlegen, Bearbeiten und Löschen
+
+Fehlt die zweite Freigabe, lässt sich das Modul öffnen, aber kein Datensatz bearbeiten (Contao antwortet mit „Forbidden"). Das ist das normale Rechtesystem von Contao und gilt für alle Tabellen gleichermaßen.
 
 ### Programmgesteuerte Nutzung
 
@@ -122,6 +144,8 @@ Speichert benutzerdefinierte Menübereiche:
 | `iconFile` | binary(16) | UUID der eigenen Bilddatei |
 | `iconColor` | varchar(6) | Hex-Farbe ohne Raute, leer = Theme-Standard |
 | `position` | int | Position im Backend-Menü (1 = ganz oben) |
+| `scope` | varchar(16) | `global` oder `user` (persönlich) |
+| `users` | blob | Bei persönlichen Bereichen: die zugeordneten Benutzer |
 | `tstamp` | int | Änderungszeitstempel |
 | `sorting` | int | Interne Sortierung |
 
@@ -136,6 +160,12 @@ Verknüpft Backend-Module zu benutzerdefinierten Bereichen:
 | `module` | varchar(255) | Name des Backend-Moduls |
 | `tstamp` | int | Änderungszeitstempel |
 | `sorting` | int | Reihenfolge im Bereich (per Drag & Drop gepflegt) |
+
+### Ergänzung an `tl_user`
+
+| Spalte | Typ | Beschreibung |
+|--------|-----|-------------|
+| `backendmenueHideGlobal` | char(1) | Globale Menübereiche für diesen Zugang ausblenden |
 
 ## Architektur
 
@@ -198,7 +228,7 @@ php -l src/**/*.php
 
 1. **Keine Verschachtelung** — Menübereiche können nicht verschachtelt werden
 2. **Keine Zuordnung von Custom-Modulen** — Nur vordefinierte Module aus `$GLOBALS['BE_MOD']` können zugeordnet werden
-3. **Keine Benutzergruppen-Filterung** — Die Menü-Anpassung gilt für alle Benutzer gleich
+3. **Keine Benutzergruppen-Zuordnung** — Ein persönlicher Bereich wird einzelnen Benutzern zugewiesen, nicht einer ganzen Benutzergruppe
 
 ## Lizenz
 

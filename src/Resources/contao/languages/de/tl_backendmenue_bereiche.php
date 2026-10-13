@@ -13,12 +13,21 @@ $GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['editheader'] = ['Bereich bearbe
 $GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['delete'] = ['Löschen'];
 $GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['show'] = ['Anzeigen'];
 
+$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['scope'] = ['Geltung', 'Ein globaler Bereich erscheint bei allen Benutzern, sofern sie die globalen Bereiche nicht in ihrem Profil ausgeblendet haben. Ein persönlicher Bereich erscheint nur bei den ausgewählten Benutzern'];
+$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['users'] = ['Benutzer', 'Die Backend-Benutzer, bei denen dieser Bereich im Menü erscheint und die ihn bearbeiten dürfen'];
+
 $GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['iconTypes'] = [
     'library' => 'Aus einer Icon-Sammlung',
     'file' => 'Eigene Bilddatei',
 ];
 
+$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['scopes'] = [
+    'global' => 'Global (für alle Benutzer)',
+    'user' => 'Persönlich (für ausgewählte Benutzer)',
+];
+
 $GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['general_legend'] = 'Allgemein';
 $GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['icon_legend'] = 'Icon';
+$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['scope_legend'] = 'Geltung';
 
 $GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['usageHint'] = 'Ein Bereich erscheint erst dann im Backend-Menü, wenn ihm über „Module verwalten" mindestens ein Modul zugeordnet wurde.';

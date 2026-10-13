@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Schachbulle\BackendMenueBundle\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
+use Schachbulle\BackendMenueBundle\Service\AreaAccess;
 use Schachbulle\BackendMenueBundle\Service\BackendMenuManipulator;
 
 /**
@@ -25,18 +26,17 @@ class BackendMenuManipulatorTest extends TestCase
     {
         unset($GLOBALS['BE_MOD']);
 
-        $manipulator = new BackendMenuManipulator();
-        $manipulator->manipulateBackendMenu();
+        $this->createManipulator()->manipulateBackendMenu();
 
         $this->assertFalse(isset($GLOBALS['BE_MOD']));
     }
 
     /**
-     * Testet, dass der Manipulator nichts tut, wenn keine benutzerdefinierten Bereiche existieren.
+     * Testet, dass das Menü unverändert bleibt, wenn keine Bereiche gelten.
      *
      * @test
      */
-    public function testDoesNothingIfNoCustomAreasExist(): void
+    public function testDoesNothingIfNoAreasApply(): void
     {
         $GLOBALS['BE_MOD'] = [
             'system' => [
@@ -44,50 +44,56 @@ class BackendMenuManipulatorTest extends TestCase
             ],
         ];
 
-        $originalBeMod = $GLOBALS['BE_MOD'];
+        $original = $GLOBALS['BE_MOD'];
 
-        $manipulator = new BackendMenuManipulator();
-        $manipulator->manipulateBackendMenu();
+        $this->createManipulator()->manipulateBackendMenu();
 
-        // Das Menü sollte unverändert bleiben
-        $this->assertEquals($originalBeMod, $GLOBALS['BE_MOD']);
+        $this->assertSame($original, $GLOBALS['BE_MOD']);
     }
 
     /**
-     * Testet die Initialisierung der Manipulator-Klasse.
-     *
-     * @test
-     */
-    public function testManipulatorCanBeInstantiated(): void
-    {
-        $manipulator = new BackendMenuManipulator();
-        $this->assertInstanceOf(BackendMenuManipulator::class, $manipulator);
-    }
-
-    /**
-     * Testet, dass Standardbereiche bei leeren Zuordnungen erhalten bleiben.
+     * Testet, dass die Standardbereiche erhalten bleiben.
      *
      * @test
      */
     public function testDefaultAreasArePreserved(): void
     {
         $GLOBALS['BE_MOD'] = [
-            'system' => [
-                'settings' => ['tables' => ['tl_settings']],
-                'log' => ['tables' => ['tl_log']],
-            ],
-            'content' => [
-                'page' => ['tables' => ['tl_page']],
-            ],
+            'content' => ['page' => ['tables' => ['tl_page']]],
+            'system' => ['log' => ['tables' => ['tl_log']]],
         ];
 
-        $originalBeMod = $GLOBALS['BE_MOD'];
+        $this->createManipulator()->manipulateBackendMenu();
 
-        $manipulator = new BackendMenuManipulator();
+        $this->assertArrayHasKey('content', $GLOBALS['BE_MOD']);
+        $this->assertArrayHasKey('system', $GLOBALS['BE_MOD']);
+    }
+
+    /**
+     * Testet, dass noch keine Bereiche angewendet wurden.
+     *
+     * @test
+     */
+    public function testNoAppliedAreasWithoutData(): void
+    {
+        $GLOBALS['BE_MOD'] = ['system' => ['log' => ['tables' => ['tl_log']]]];
+
+        $manipulator = $this->createManipulator();
         $manipulator->manipulateBackendMenu();
 
-        // Die Struktur sollte gleich bleiben (da keine custom areas)
-        $this->assertArrayHasKey('system', $GLOBALS['BE_MOD']);
-        $this->assertArrayHasKey('content', $GLOBALS['BE_MOD']);
+        $this->assertSame([], $manipulator->getAppliedAreas());
+    }
+
+    /**
+     * Baut einen Manipulator mit einem Zugriffs-Doppel ohne geltende Bereiche.
+     *
+     * @return BackendMenuManipulator Der vorbereitete Service
+     */
+    private function createManipulator(): BackendMenuManipulator
+    {
+        $access = $this->createMock(AreaAccess::class);
+        $access->method('getAreasForMenu')->willReturn([]);
+
+        return new BackendMenuManipulator($access);
     }
 }

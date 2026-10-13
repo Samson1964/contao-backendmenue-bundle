@@ -100,6 +100,7 @@ $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
         'module' => [
             'inputType' => 'select',
             'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_zuordnungen']['module'],
+            'exclude' => false,
             'eval' => [
                 'mandatory' => true,
                 'tl_class' => 'w50',

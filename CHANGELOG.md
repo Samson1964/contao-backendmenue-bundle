@@ -1,5 +1,34 @@
 # Backend-Menü-Bundle Changelog
 
+## Version 1.5.0 (2026-10-13)
+
+* Add: Menübereiche haben eine **Geltung**. Ein globaler Bereich erscheint bei allen
+  Benutzern, ein persönlicher nur bei den ausgewählten. Neue Felder `scope` und `users`
+  in `tl_backendmenue_bereiche`.
+* Add: Neues Feld „Globale Menübereiche ausblenden" in `tl_user`, einstellbar im eigenen
+  Profil (Backend-Einstellungen) und in der Benutzerverwaltung. Ist es gesetzt, gelten für
+  diesen Zugang nur die persönlichen Bereiche; die Module der globalen bleiben in ihren
+  ursprünglichen Menübereichen.
+* Add: Benutzer ohne Administratorrechte verwalten ihre eigenen Bereiche selbst. Sie sehen
+  im Modul ausschließlich ihre persönlichen Bereiche, ein neu angelegter gehört automatisch
+  ihnen, und die Geltung ist für sie nicht einstellbar. Die Beschränkung wirkt dreifach:
+  über den Listen-Filter, die gekürzte Palette und eine Prüfung jeder ID in der Anfrage —
+  ein fremder Bereich lässt sich also auch nicht über die Adresszeile öffnen.
+* Add: Die Bereichs-Übersicht zeigt die Geltung als Spalte, bei persönlichen Bereichen mit
+  den Namen der betroffenen Benutzer.
+* Add: Neuer Service `AreaAccess` bündelt die Geltungs- und Rechtelogik, mit Tests.
+* Change: Bereiche, aus denen das letzte für den Benutzer sichtbare Modul herausgenommen
+  wurde, werden aus dem Menü entfernt. Contao legt solche Gruppen sonst an, füllt sie nicht
+  und läuft anschließend in eine Warnung.
+* Change: Die neuen Felder `scope` und `users` sind als `exclude` markiert, die übrigen
+  ausdrücklich nicht — Contao 5.7 verweigert einem Benutzer sonst das Bearbeiten der ganzen
+  Tabelle, sobald kein Feld ausdrücklich freigegeben ist.
+
+**Hinweis zur Rechtevergabe:** Damit ein Benutzer ohne Administratorrechte das Modul nutzen
+kann, braucht er neben der Freigabe des Moduls auch **Datensatzrechte** für
+`tl_backendmenue_bereiche` und `tl_backendmenue_zuordnungen`. Ohne sie lässt sich das Modul
+öffnen, aber kein Datensatz bearbeiten. Das ist das normale Rechtesystem von Contao.
+
 ## Version 1.4.1 (2026-10-13)
 
 * Fix: Die Symbole für Bearbeiten, Verschieben, Löschen und Anzeigen steckten in der

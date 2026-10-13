@@ -9,13 +9,26 @@ use Contao\Database;
 /**
  * Service zur Manipulation der Backend-Menüstruktur basierend auf konfigurierten Bereichen.
  *
- * Lädt benutzerdefinierte Menübereiche aus der Datenbank und ordnet Backend-Module
- * entsprechend um. Standardbereiche bleiben erhalten; einzelne Module können in neue
- * Bereiche verschoben werden. Die neuen Bereiche werden — sortiert nach ihrer
- * Position — hinter den Standardbereichen eingehängt.
+ * Lädt die für den angemeldeten Benutzer geltenden Menübereiche und ordnet die
+ * Backend-Module entsprechend um. Standardbereiche bleiben erhalten; einzelne
+ * Module werden in die eigenen Bereiche verschoben und diese an ihrer
+ * Wunschposition einsortiert.
+ *
+ * Welche Bereiche gelten, entscheidet der AreaAccess: die global definierten
+ * (sofern der Benutzer sie nicht ausgeblendet hat) und seine persönlichen.
  */
 class BackendMenuManipulator
 {
+    /**
+     * Konstruktor mit Dependency Injection.
+     *
+     * @param AreaAccess $access Liefert die für den Benutzer geltenden Bereiche
+     */
+    public function __construct(
+        private readonly AreaAccess $access,
+    ) {
+    }
+
     /**
      * Nach der Manipulation tatsächlich angelegte Bereiche.
      *
@@ -24,6 +37,14 @@ class BackendMenuManipulator
      * ['iconType' => 'library'|'file', 'icon' => …, 'iconFile' => UUID|null, 'iconColor' => …]
      */
     private array $appliedAreas = [];
+
+    /**
+     * Standardbereiche, aus denen Module herausgenommen wurden.
+     *
+     * Nur diese werden am Ende auf Brauchbarkeit geprüft — fremde Gruppen,
+     * die schon vorher niemandem etwas zeigten, bleiben unangetastet.
+     */
+    private array $touchedGroups = [];
 
     /**
      * Gibt die im aktuellen Request angelegten Bereiche zurück.
@@ -64,8 +85,9 @@ class BackendMenuManipulator
                 return;
             }
 
-            $areas = $this->loadCustomAreas($db);
-            $assignments = $this->loadAssignments($db);
+            // Nur die Bereiche, die für diesen Benutzer gelten
+            $areas = $this->access->getAreasForMenu();
+            $assignments = $this->loadAssignments($db, array_keys($areas));
         } catch (\Throwable) {
             return;
         }
@@ -83,54 +105,34 @@ class BackendMenuManipulator
     }
 
     /**
-     * Lädt alle benutzerdefinierten Menübereiche aus der Datenbank.
-     *
-     * @param Database $db Die Contao-Datenbankverbindung
-     *
-     * @return array Bereiche nach Position sortiert, Schlüssel = ID, Werte:
-     *               ['name', 'iconType', 'icon', 'iconFile', 'iconColor', 'position']
-     */
-    private function loadCustomAreas(Database $db): array
-    {
-        $result = $db->execute(
-            'SELECT id, name, iconType, icon, iconFile, iconColor, position
-             FROM tl_backendmenue_bereiche ORDER BY position, id'
-        );
-
-        $areas = [];
-
-        while ($result->next()) {
-            $areas[(int) $result->id] = [
-                'name' => (string) $result->name,
-                'iconType' => (string) ($result->iconType ?: 'library'),
-                'icon' => (string) $result->icon,
-                'iconFile' => $result->iconFile,
-                'iconColor' => (string) $result->iconColor,
-                'position' => (int) $result->position,
-            ];
-        }
-
-        return $areas;
-    }
-
-    /**
-     * Lädt alle Modul-Zuordnungen, sortiert nach Bereich und Position.
-     *
-     * @param Database $db Die Contao-Datenbankverbindung
+     * Lädt die Modul-Zuordnungen der übergebenen Bereiche.
      *
      * Die Reihenfolge stammt aus dem Feld 'sorting', das im Backend per
      * Drag & Drop gepflegt wird.
      *
+     * @param Database $db      Die Contao-Datenbankverbindung
+     * @param array    $areaIds Die Bereiche, deren Zuordnungen gelten sollen;
+     *                          bei leerer Liste wird nichts geladen
+     *
      * @return array Liste von ['module' => ..., 'area_id' => ...]
      */
-    private function loadAssignments(Database $db): array
+    private function loadAssignments(Database $db, array $areaIds): array
     {
-        $result = $db->execute(
-            'SELECT z.module, z.pid AS area_id
-             FROM tl_backendmenue_zuordnungen z
-             INNER JOIN tl_backendmenue_bereiche b ON z.pid = b.id
-             ORDER BY b.position, z.sorting, z.id'
-        );
+        if ([] === $areaIds) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, \count($areaIds), '?'));
+
+        $result = $db
+            ->prepare(
+                'SELECT z.module, z.pid AS area_id
+                 FROM tl_backendmenue_zuordnungen z
+                 INNER JOIN tl_backendmenue_bereiche b ON z.pid = b.id
+                 WHERE z.pid IN (' . $placeholders . ')
+                 ORDER BY b.position, z.sorting, z.id'
+            )
+            ->execute(...$areaIds);
 
         $assignments = [];
 
@@ -164,6 +166,7 @@ class BackendMenuManipulator
                 if (\is_array($modules) && isset($modules[$moduleName])) {
                     $extracted[$moduleName] = $modules[$moduleName];
                     unset($GLOBALS['BE_MOD'][$group][$moduleName]);
+                    $this->touchedGroups[$group] = true;
                     break;
                 }
             }
@@ -255,9 +258,33 @@ class BackendMenuManipulator
     private function removeEmptyGroups(): void
     {
         foreach ($GLOBALS['BE_MOD'] as $group => $modules) {
-            if (\is_array($modules) && [] === $modules) {
-                unset($GLOBALS['BE_MOD'][$group]);
+            if (!\is_array($modules)) {
+                continue;
             }
+
+            if ([] === $modules) {
+                unset($GLOBALS['BE_MOD'][$group]);
+                continue;
+            }
+
+            // Gruppen, aus denen Module herausgenommen wurden, können für
+            // diesen Benutzer nur noch unsichtbare Module enthalten. Contao
+            // legt solche Gruppen trotzdem an (BackendUser::navigation prüft
+            // die Gruppe gegen die Benutzerrechte, füllt sie aber erst nach
+            // der Sichtbarkeitsprüfung je Modul) und läuft anschließend im
+            // BackendMainListener in eine Warnung, weil der Schlüssel
+            // "modules" fehlt. Deshalb hier selbst aufräumen.
+            if (!isset($this->touchedGroups[$group])) {
+                continue;
+            }
+
+            foreach ($modules as $moduleName => $config) {
+                if ($this->access->isModuleVisible((string) $moduleName, \is_array($config) ? $config : [])) {
+                    continue 2;
+                }
+            }
+
+            unset($GLOBALS['BE_MOD'][$group]);
         }
     }
 }
