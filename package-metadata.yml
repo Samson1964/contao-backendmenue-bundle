@@ -1,0 +1,39 @@
+# Quelle für die Metadaten im Contao Manager (contao/package-metadata).
+# Änderungen hier werden von Claude in den Fork übertragen.
+#
+# Hinweis zur Formulierung: Der Upstream-Linter prüft die Rechtschreibung nur in
+# "title" und "description" (deutsches aspell, das an Bindestrichen und Ziffern
+# zerlegt). Produktnamen wie Font Awesome oder Lucide stehen deshalb in den
+# "keywords", die ungeprüft bleiben.
+
+de:
+    title: Eigenes Backend-Menü
+    description: >
+        Legt im Backend eigene Bereiche für die Navigation an, jeder mit eigenem
+        Namen, Icon und eigener Farbe. Module lassen sich frei auf die Bereiche
+        verteilen und ihre Reihenfolge mit der Maus festlegen. Die vorhandenen
+        Bereiche von Contao bleiben erhalten.
+    keywords:
+        - Backend
+        - Menü
+        - Navigation
+        - Menübereich
+        - Icon
+        - Font Awesome
+        - Lucide
+        - Drag and Drop
+
+en:
+    title: Custom back end menu
+    description: >
+        Adds your own sections to the back end navigation, each with its own name,
+        icon and color. Modules can be moved freely between the sections and their
+        order set with the mouse. The sections that come with Contao remain in place.
+    keywords:
+        - back end
+        - menu
+        - navigation
+        - sections
+        - modules
+        - icon
+        - drag and drop

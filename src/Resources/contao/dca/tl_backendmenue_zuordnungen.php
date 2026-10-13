@@ -25,7 +25,15 @@ $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
             'fields' => ['sorting'],
             'panelLayout' => 'search',
             'headerFields' => ['name'],
-            // child_record_callback liefert DcaCallbackListener::listAssignment() (per #[AsCallback])
+        ],
+        'label' => [
+            'fields' => ['module'],
+            // Bewusst kein child_record_callback: Contao 5.7 hat ihn abgekündigt und
+            // hängt bei seiner Nutzung einen als "primary" markierten Drag-Handle an
+            // die Operationen — sobald eine Operation primär ist, verschiebt das
+            // Backend alle übrigen Symbole ins Aufklappmenü. Das Label baut deshalb
+            // DcaCallbackListener::formatAssignmentLabel() (per #[AsCallback]);
+            // Contao 4.13 erreicht es über den else-Zweig von DC_Table::parentView().
         ],
         'global_operations' => [
             'all' => [
@@ -34,11 +42,16 @@ $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
                 'attributes' => 'onclick="Backend.getScrollOffset();"',
             ],
         ],
+        // 'primary' => true hält jedes Symbol dauerhaft in der Zeile sichtbar —
+        // sonst verschiebt Contao 5.7 sie ins Aufklappmenü, weil das Backend bei
+        // sortierbaren Tabellen selbst einen primären Drag-Handle anhängt.
+        // Contao 4.13 kennt den Schlüssel nicht und ignoriert ihn.
         'operations' => [
             'edit' => [
                 'href' => 'act=edit',
                 'icon' => 'edit.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_zuordnungen']['edit'],
+                'primary' => true,
             ],
             // Ohne 'cut' fehlt der Drag-&-Drop-Sortierung ihr Unterbau: Contao
             // setzt beim Ablegen genau diese Aktion ab (act=paste&mode=cut)
@@ -47,17 +60,20 @@ $GLOBALS['TL_DCA']['tl_backendmenue_zuordnungen'] = [
                 'icon' => 'cut.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_zuordnungen']['cut'],
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
+                'primary' => true,
             ],
             'delete' => [
                 'href' => 'act=delete',
                 'icon' => 'delete.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_zuordnungen']['delete'],
                 'attributes' => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\'))return false;Backend.getScrollOffset();"',
+                'primary' => true,
             ],
             'show' => [
                 'href' => 'act=show',
                 'icon' => 'show.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_zuordnungen']['show'],
+                'primary' => true,
             ],
         ],
     ],

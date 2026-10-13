@@ -122,22 +122,31 @@ class DcaCallbackListener
     }
 
     /**
-     * Rendert eine Modul-Zuordnung in der Eltern-Ansicht (child_record_callback).
+     * Beschriftet eine Modul-Zuordnung in der Eltern-Ansicht.
      *
-     * Die Reihenfolge wird per Drag & Drop festgelegt, deshalb steht hier
-     * keine Positionsnummer mehr — nur der Modulname und sein technischer Schlüssel.
+     * Die Reihenfolge wird per Drag & Drop festgelegt, deshalb steht hier keine
+     * Positionsnummer mehr — nur der Klarname des Moduls und sein technischer
+     * Schlüssel. Das umgebende Markup setzt Contao selbst, hier kommt nur der
+     * Inhalt zurück.
      *
-     * @param array $row Die Datensatz-Zeile aus tl_backendmenue_zuordnungen
+     * Die beiden Contao-Fassungen rufen diesen Callback im Eltern-Modus mit
+     * unterschiedlich vielen Argumenten auf (4.13 mit drei, 5.7 mit vier, siehe
+     * DataContainer::generateRecordLabel) — $dc und $args sind deshalb optional.
      *
-     * @return string HTML für den Listeneintrag
+     * @param array $row  Die Datensatz-Zeile aus tl_backendmenue_zuordnungen
+     * @param string $label Das von Contao aus list.label.fields gebaute Label (ungenutzt)
+     * @param mixed $dc   Der Data Container; fehlt unter Contao 4.13
+     * @param array $args Die Spaltenwerte; fehlen unter Contao 4.13
+     *
+     * @return string Das Label als HTML
      */
-    #[AsCallback(table: 'tl_backendmenue_zuordnungen', target: 'list.sorting.child_record')]
-    public function listAssignment(array $row): string
+    #[AsCallback(table: 'tl_backendmenue_zuordnungen', target: 'list.label.label')]
+    public function formatAssignmentLabel(array $row, string $label = '', $dc = null, array $args = []): string
     {
-        $label = $GLOBALS['TL_LANG']['MOD'][$row['module']][0] ?? $row['module'];
+        $moduleLabel = $GLOBALS['TL_LANG']['MOD'][$row['module']][0] ?? $row['module'];
 
-        return '<div class="tl_content_left">' . StringUtil::specialchars($label)
-            . ' <span class="tl_gray">[' . StringUtil::specialchars($row['module']) . ']</span></div>';
+        return StringUtil::specialchars($moduleLabel)
+            . ' <span class="tl_gray">[' . StringUtil::specialchars((string) $row['module']) . ']</span>';
     }
 
     /**

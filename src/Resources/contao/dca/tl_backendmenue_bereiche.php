@@ -36,6 +36,12 @@ $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
                 'attributes' => 'onclick="Backend.getScrollOffset();"',
             ],
         ],
+        // 'primary' => true hält jedes Symbol dauerhaft in der Zeile sichtbar.
+        // Hintergrund: Contao 5.7 zeigt nur primäre Operationen direkt an und
+        // verschiebt alle übrigen ins Aufklappmenü, sobald überhaupt eine
+        // Operation primär ist — und das Backend hängt bei sortierbaren Tabellen
+        // selbst einen primären (unsichtbaren) Drag-Handle an. Contao 4.13 kennt
+        // den Schlüssel nicht und ignoriert ihn.
         'operations' => [
             // Konvention: 'edit' springt in die Kindtabelle, 'editheader' bearbeitet
             // den Datensatz selbst (keine 'children'-Operation, siehe Projektrichtlinien)
@@ -43,22 +49,26 @@ $GLOBALS['TL_DCA']['tl_backendmenue_bereiche'] = [
                 'href' => 'table=tl_backendmenue_zuordnungen',
                 'icon' => 'edit.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['edit'],
+                'primary' => true,
             ],
             'editheader' => [
                 'href' => 'act=edit',
                 'icon' => 'header.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['editheader'],
+                'primary' => true,
             ],
             'delete' => [
                 'href' => 'act=delete',
                 'icon' => 'delete.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['delete'],
                 'attributes' => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? '') . '\'))return false;Backend.getScrollOffset();"',
+                'primary' => true,
             ],
             'show' => [
                 'href' => 'act=show',
                 'icon' => 'show.svg',
                 'label' => &$GLOBALS['TL_LANG']['tl_backendmenue_bereiche']['show'],
+                'primary' => true,
             ],
         ],
     ],

@@ -1,106 +1,121 @@
-# Changelog
+# Backend-Menü-Bundle Changelog
 
-Alle wichtigen Änderungen an diesem Projekt werden in dieser Datei dokumentiert.
+## Version 1.4.1 (2026-10-13)
 
-## 1.4.0 (2026-08-10)
+* Fix: Die Symbole für Bearbeiten, Verschieben, Löschen und Anzeigen steckten in der
+  Modul-Übersicht hinter dem Aufklappmenü. Contao 5.7 zeigt nur als `primary` markierte
+  Operationen direkt an, sobald überhaupt eine Operation primär ist — und das Backend
+  hängt bei sortierbaren Tabellen selbst einen primären (unsichtbaren) Drag-Handle an.
+  Alle Operationen beider Tabellen sind jetzt als `primary` markiert und damit dauerhaft
+  sichtbar. Contao 4.13 kennt den Schlüssel nicht und ignoriert ihn.
+* Change: Der in Contao 5.7 abgekündigte `child_record_callback` ist durch ein
+  `label_callback` ersetzt (`DcaCallbackListener::formatAssignmentLabel()`). Contao 4.13
+  erreicht es über den `else`-Zweig von `DC_Table::parentView()`; die beiden Fassungen
+  rufen den Callback im Eltern-Modus mit unterschiedlich vielen Argumenten auf, weshalb
+  `$dc` und `$args` optional sind.
+* Add: `package-metadata.yml` für die Beschreibung im Contao Manager.
 
-### Add
-- Icon-Farbe frei wählbar (Farbwähler im Bereichs-Formular). Bei Bilddateien wird die Farbe per CSS-Maske auf die Silhouette angewendet, sodass sich einfarbige SVGs beliebig umfärben lassen; bleibt das Feld leer, gilt weiterhin die Theme-Farbe
-- Eigenes Icon aus der Dateiverwaltung wählbar (SVG, PNG, GIF) — umschaltbar über das neue Feld „Icon-Herkunft"
-- Reihenfolge der Module per Drag & Drop statt über ein Positionsfeld
+## Version 1.4.0 (2026-08-10)
 
-### Change
-- Die Modul-Zuordnungen nutzen jetzt das Contao-Standardfeld `sorting`; eine Migration überführt bestehende Positionswerte automatisch, bevor der Schema-Abgleich die alte Spalte entfernt
-- Bereichs-Übersicht zeigt bei eigenen Icons den Dateipfad statt der rohen UUID
+* Add: Icon-Farbe frei wählbar (Farbwähler im Bereichs-Formular). Bei Bilddateien wird die
+  Farbe per CSS-Maske auf die Silhouette angewendet, sodass sich einfarbige SVG beliebig
+  umfärben lassen; bleibt das Feld leer, gilt weiterhin die Farbe des Backend-Themes.
+* Add: Eigenes Icon aus der Dateiverwaltung wählbar (SVG, PNG, GIF) — umschaltbar über das
+  neue Feld „Icon-Herkunft".
+* Add: Reihenfolge der Module per Drag & Drop statt über ein Positionsfeld.
+* Change: Die Modul-Zuordnungen nutzen jetzt das Contao-Standardfeld `sorting`; eine
+  Migration überführt bestehende Positionswerte, bevor der Schema-Abgleich die alte Spalte
+  entfernt.
+* Change: Die Bereichs-Übersicht zeigt bei eigenen Icons den Dateipfad statt der rohen UUID.
 
-## 1.3.0 (2026-08-10)
+## Version 1.3.0 (2026-08-10)
 
-### Add
-- Bedienhinweis in der Bereichs-Übersicht: Ein Bereich erscheint erst im Menü, wenn ihm mindestens ein Modul zugeordnet wurde
-- Die Position zählt jetzt über das Gesamtmenü: 1 = ganz oben (vor den Standardbereichen), 2 = zweite Stelle usw.; größere Werte hängen den Bereich ans Ende
+* Add: Bedienhinweis in der Bereichs-Übersicht — ein Bereich erscheint erst im Menü, wenn
+  ihm mindestens ein Modul zugeordnet wurde.
+* Add: Die Position zählt über das Gesamtmenü: 1 = ganz oben (vor den Standardbereichen),
+  2 = zweite Stelle usw.; größere Werte hängen den Bereich ans Ende.
+* Fix: Der Bereichsname war gegenüber den Standardbereichen nach rechts eingerückt. Die
+  Icons liegen jetzt im Icon-Raster der Backend-Themes (`background` bei 3px 2px für SVG,
+  absolut positioniertes `::before` für Schrift-Glyphen) statt als Inline-Element vor dem Text.
 
-### Fix
-- Bereichsname war gegenüber den Standardbereichen nach rechts eingerückt: Icons liegen jetzt exakt im Icon-Raster der Backend-Themes (background bei 3px 2px für SVGs, absolut positioniertes ::before für Schrift-Glyphen) statt als Inline-Element vor dem Text
+## Version 1.2.2 (2026-08-10)
 
-## 1.2.2 (2026-08-10)
+* Fix: Die Menü-Manipulation lief über den Hook `initializeSystem`, den Contao nur auslöst,
+  wenn das Verzeichnis `system/tmp` existiert — fehlte es, blieb die Manipulation
+  stillschweigend aus. Sie hängt jetzt am `MenuEvent` (`contao.backend_menu_build`,
+  Priorität 20), das in Contao 4.13 wie 5.7 unmittelbar vor dem Core-Listener läuft.
 
-### Fix
-- Menü-Manipulation vom Hook `initializeSystem` auf das `MenuEvent` (`contao.backend_menu_build`, Priorität 20) umgestellt: Der Hook feuert nur, wenn `system/tmp` existiert — fehlt das Verzeichnis, blieb die Manipulation stillschweigend aus. Das Event kennt keine solche Bedingung und läuft in Contao 4.13 wie 5.7 unmittelbar vor dem Core-Listener, der das Menü aus BE_MOD baut. End-to-End am lokalen 5.7.7-Prüfstand verifiziert (Bereich erscheint, Modul wird umgehängt, Icon-CSS wird injiziert).
+## Version 1.2.1 (2026-08-10)
 
-## 1.2.1 (2026-08-10)
+* Fix: Die fehlende DependencyInjection-Extension ergänzt. Ohne sie wurde die
+  `services.yaml` nie geladen, wodurch sämtliche Services, Hooks und DCA-Callbacks
+  wirkungslos blieben (leere Icon- und Modul-Auswahl, keine Menü-Manipulation).
 
-### Fix
-- Fehlende DependencyInjection-Extension ergänzt: Die services.yaml wurde nie geladen, dadurch waren sämtliche Services, Hooks und DCA-Callbacks des Bundles wirkungslos (leere Icon- und Modul-Auswahl, keine Menü-Manipulation). Verifiziert am lokalen Contao-5.7.7-Prüfstand: alle fünf Services, beide Hooks und alle drei Callbacks sind jetzt im Container registriert.
+## Version 1.2.0 (2026-08-10)
 
-## 1.2.0 (2026-08-10)
+* Add: Lucide-Icons als dritter Icon-Satz (132 Icons, Schrift aus dem offiziellen
+  lucide-static-Paket, ISC-Lizenz).
+* Change: Font Awesome von 5.5 auf 6.7.2 aktualisiert (92 Icons mit kanonischen FA6-Namen,
+  Codepoints aus der Original-CSS extrahiert). Alte FA5-Namen wie `fa-cog` oder `fa-search`
+  werden automatisch auf ihre FA6-Entsprechung aufgelöst, bestehende Werte bleiben gültig.
+* Change: Icon-Schriften werden nur geladen, wenn mindestens ein Bereich sie nutzt.
 
-### Add
-- Lucide-Icons als dritter Icon-Satz (132 Icons, Schrift aus dem offiziellen lucide-static-Paket, ISC-Lizenz)
-- FA5-Alt-Namen (z. B. `fa-cog`, `fa-search`) werden automatisch auf ihre FA6-Entsprechung aufgelöst — bestehende Datenbankwerte bleiben gültig
+## Version 1.1.0 (2026-08-10)
 
-### Change
-- Font Awesome von 5.5 auf 6.7.2 aktualisiert (92 Icons mit kanonischen FA6-Namen, Codepoints aus der Original-CSS extrahiert)
-- Icon-Schriften werden weiterhin nur geladen, wenn mindestens ein Bereich sie nutzt
+* Add: Die Icons der Bereiche erscheinen in der Backend-Navigation (als `::before` an den
+  Gruppenköpfen, eingefügt über den Hook `parseBackendTemplate`).
+* Add: Font Awesome Free (Solid) wird als Webfont mitgeliefert — es wird nichts von
+  externen Servern geladen.
+* Change: Die Icon-Listen gegen die echten Bestände geprüft: Font-Awesome-Icons mit
+  verifizierten Unicode-Codepoints, 48 Contao-Theme-Icons aus der Schnittmenge von 4.13.58
+  und 5.7.7. Die bisherigen Listen enthielten teils nicht existierende Namen.
+* Change: Die Icon-Auswahl zeigt deutsche Bezeichnungen mit dem technischen Namen als
+  Suchhilfe.
 
-## 1.1.0 (2026-08-10)
+## Version 1.0.5 (2026-08-10)
 
-### Add
-- Icons der Bereiche werden jetzt in der Backend-Navigation angezeigt (per ::before an den Gruppenköpfen, injiziert über den Hook parseBackendTemplate)
-- Font Awesome Free 5.5 (Solid) wird als Webfont mitgeliefert — kein Laden von externen Servern
-- Neuer BackendAssetsListener erzeugt die Icon-CSS-Regeln nur für bekannte Icons (Schutz vor beliebigen Datenbankwerten)
+* Fix: DataContainer-Klasse korrigiert auf `Contao\DC_Table`; die in 1.0.3 eingetragene
+  Klasse `Contao\DataContainer\Table` existiert nicht. Behebt den ClassNotFoundError
+  endgültig, kompatibel mit 4.13 und 5.x.
+* Fix: Attribut-Namespace korrigiert auf `Contao\CoreBundle\DependencyInjection\Attribute`
+  — durch den falschen Namespace wurden die Hooks nie registriert.
+* Fix: Die Menü-Manipulation auf einen real existierenden Hook umgestellt; der zuvor
+  verwendete Hook `loadBackendModule` gibt es in Contao nicht.
+* Fix: Verwaisten `child_record_callback` auf eine gelöschte Inline-Klasse durch einen
+  `#[AsCallback]`-Listener ersetzt, der auch die Icon- und Modul-Optionen liefert.
+* Fix: Im Manipulator wurden Module erst aus dem Menü entfernt und danach gesucht —
+  umgehängte Module gingen dadurch verloren.
+* Fix: BE_MOD-Gruppenschlüssel auf `backendmenue_<id>` umgestellt; Bereichsnamen mit
+  Leerzeichen oder Umlauten zerstörten als CSS-Klasse das Backend-Markup.
+* Fix: Vor der ersten Migration fehlende Tabellen blockieren das Backend nicht mehr.
+* Change: Operationen nach Konvention — `edit` öffnet die Modul-Zuordnungen, `editheader`
+  bearbeitet den Bereich.
+* Change: PHP-Anforderung auf `^8.1` gesetzt (readonly-Promotion), `contao/manager-plugin`
+  als Abhängigkeit ergänzt, ungenutzte SQL-Datei entfernt.
 
-### Change
-- Icon-Listen komplett überarbeitet und gegen die echten Bestände geprüft: 84 Font-Awesome-Icons mit verifizierten Unicode-Codepoints (inkl. Schach-Icons), 48 Contao-Theme-Icons aus der Schnittmenge von 4.13.58 und 5.7.7 — die bisherigen Listen enthielten teils nicht existierende Namen
-- Icon-Auswahl zeigt deutsche Bezeichnungen mit technischem Namen als Suchhilfe
+## Version 1.0.4 (2026-08-10)
 
-## 1.0.5 (2026-08-10)
+* Fix: Manuelle Hook-Registrierung entfernt, die beim `cache:warmup` zu
+  „ArgumentCountError: Too few arguments" führte; die Registrierung läuft über das
+  `#[AsHook]`-Attribut.
 
-### Fix
-- DataContainer-Klasse korrigiert: `Contao\DC_Table` statt der nicht existierenden Klasse `Contao\DataContainer\Table` (behebt den ClassNotFoundError endgültig, kompatibel mit 4.13 und 5.x)
-- Attribut-Namespace korrigiert: `Contao\CoreBundle\DependencyInjection\Attribute` statt des nicht existierenden `Contao\CoreBundle\Attributes` — die Hooks wurden dadurch nie registriert
-- Menü-Manipulation auf den real existierenden Hook `initializeSystem` umgestellt (der Hook `loadBackendModule` existiert in Contao nicht); läuft nur noch bei Backend-Anfragen
-- Verwaisten `child_record_callback` auf gelöschte Inline-Klasse durch `#[AsCallback]`-Listener ersetzt (DcaCallbackListener, liefert auch Icon- und Modul-Optionen)
-- Logikfehler im BackendMenuManipulator: Module wurden erst aus dem Menü entfernt und dann gesucht — umgehängte Module gingen dadurch komplett verloren
-- BE_MOD-Gruppenschlüssel auf `backendmenue_<id>` umgestellt (Bereichsnamen mit Leerzeichen/Umlauten zerstörten als CSS-Klasse das Backend-Markup)
-- Schutz vor fehlenden Tabellen: Vor der ersten Migration bleibt das Backend nutzbar
+## Version 1.0.3 (2026-08-10)
 
-### Change
-- Operationen nach Konvention: `edit` öffnet die Modul-Zuordnungen, `editheader` bearbeitet den Bereich
-- PHP-Anforderung ehrlich auf `^8.1` gesetzt (readonly-Promotion); `contao/manager-plugin` als Abhängigkeit ergänzt
-- Ungenutzte SQL-Datei entfernt (das Schema stammt vollständig aus den DCA-Definitionen)
+* Fix: Versuch, den ClassNotFoundError über einen vollständigen DataContainer-Namespace
+  zu beheben (in 1.0.5 richtiggestellt).
 
-## 1.0.4 (2026-08-10)
+## Version 1.0.2 (2026-08-10)
 
-### Fix
-- Entferne manuelle Hook-Registrierung die zu Dependency-Injection-Fehlern führt
-- Nutze Symfony `#[AsHook]` Attribute für korrekte Hook-Integration
-- Behebt "ArgumentCountError: Too few arguments" beim cache:warmup
+* Fix: DCA-Callbacks aus den DCA-Dateien in einen Listener verschoben.
 
-## 1.0.3 (2026-08-10)
+## Version 1.0.1 (2026-08-10)
 
-### Fix
-- Contao 5.7 Kompatibilität: DataContainer Namespace vollständig angeben (`Contao\DataContainer\Table`)
-- Behebt "ClassNotFoundError: Attempted to load class Table from global namespace"
+* Fix: Deutsche Beschriftung des Backend-Moduls ergänzt.
 
-## 1.0.2 (2026-08-10)
+## Version 1.0.0 (2026-08-09)
 
-### Fix
-- Behobe "Class Table not found" Fehler durch Refactoring der DCA-Callbacks
-- LoadDataContainerListener für korrekte Hook-Integration
-
-## 1.0.1 (2026-08-10)
-
-### Fix
-- Deutsche Übersetzung für Backend-Modul-Label hinzugefügt
-
-## 1.0.0 (2026-08-09)
-
-### Add
-- Initialer Release
-- Backend-Modul zur Verwaltung benutzerdefinierter Menübereiche
-- Icon-Picker mit Font Awesome 6 und Contao Standard Icons
-- Möglichkeit, Backend-Module zwischen Bereichen zu verschieben
-- Sortierbarkeit von Bereichen und Modulen
-- Support für Contao 4.13 und 5.7
-- PHPUnit Tests für Services
-- Umfassende Dokumentation in README.md
+* Add: Backend-Modul zur Verwaltung eigener Menübereiche mit Name, Icon und Position.
+* Add: Beliebige Backend-Module lassen sich den Bereichen zuordnen; die Standardbereiche
+  von Contao bleiben erhalten.
+* Add: Unterstützung für Contao 4.13 und 5.7, Tests für die Services, Dokumentation in der
+  README.
